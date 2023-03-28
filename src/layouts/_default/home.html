@@ -9,13 +9,27 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.16.11/dist/css/uikit.min.css"
           integrity="sha256-XP1nMbaNkpaqweVWm6VOZuwmiqRKXeI9fvXXU7JqXgc=" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ "css/styles.css" | relURL}}">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{{"apple-touch-icon.png" | relURL }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{"favicon-32x32.png" | relURL }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{"favicon-16x16.png" | relURL }}">
+    <link rel="manifest" href="{{"site.webmanifest" | relURL }}">
+    <link rel="mask-icon" href="{{"safari-pinned-tab.svg" | relURL }}" color="#5bbad5">
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Orientation Test">
+    <meta name="application-name" content="Orientation Test">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="msapplication-TileColor" content="#603cba">
+    <meta name="theme-color" content="#ffffff">
+
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.11/dist/js/uikit.min.js"
+            async
             integrity="sha256-6APb/Kno+RRKAnlMzJzlJMyXQij6e9mU4Ru5N37HQvk=" crossorigin="anonymous"></script>
-    <script src="{{ "js/code.js" | relURL}}"></script>
+    <script async src="{{ "js/code.js" | relURL}}"></script>
     <title>{{ .Site.Title }}</title>
 </head>
 <body>
-<div class="uk-section">
+<div class="uk-section uk-light">
     <div class="uk-container">
         <h1 class="uk-h1 uk-text-center uk-margin-top">{{ .Site.Title }}</h1>
         <p>
@@ -53,7 +67,10 @@
                         <div id="{{.id}}" class="uk-card uk-card-body uk-card-default">
                             <div>
                                 <img src="{{ "images/phone.jpg" | relURL}}" class="phone"
+                                     alt="phone orientation {{.id}}"
                                      style="transform: rotate({{.rotation}}deg)"
+                                     width="528"
+                                     height="528"
                                 >
                             </div>
                             <div class="uk-text-center">
@@ -68,5 +85,10 @@
         </form>
     </div>
 </div>
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('{{"service-worker.js" | relURL }}');
+    }
+</script>
 </body>
 </html>
