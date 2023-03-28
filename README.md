@@ -7,6 +7,8 @@ you can use it in your web projects.
 
 **[DEMO IS HERE](https://screen-orientation-test.walitoff.com/)**
 
+![Cover image](https://user-images.githubusercontent.com/16267156/228318924-5fb7f389-9570-4732-b60d-a13960f5c4f6.jpg)
+
 ## How to test
 
 1. Open the [demo page](https://screen-orientation-test.walitoff.com/)
