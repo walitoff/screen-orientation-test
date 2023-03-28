@@ -39,6 +39,33 @@ function lockOrientation(orientation) {
     }
 }
 
+function toggleFullscreenMode() {
+    UIkit.notification.closeAll();
+    if (!document.fullscreenElement) {
+        console.log("Entering fullscreen mode");
+        try {
+            document.documentElement.requestFullscreen({navigationUI: "hide"}).then(() => {
+                UIkit.notification("Entered fullscreen mode", {status: "success"});
+            }).catch((error) => {
+                UIkit.notification(`Failed to enter fullscreen mode. ${error}`, {status: 'danger'});
+            });
+        } catch (error) {
+            UIkit.notification(`Fullscreen mode not supported. ${error}`, {status: 'danger'});
+        }
+    } else {
+        console.log("Exiting fullscreen mode");
+        try {
+            document.exitFullscreen().then(() => {
+                UIkit.notification("Exited fullscreen mode", {status: "success"});
+            }).catch((error) => {
+                UIkit.notification(`Failed to exit fullscreen mode. ${error}`, {status: 'danger'});
+            });
+        } catch (error) {
+            UIkit.notification(`Fullscreen mode not supported. ${error}`, {status: 'danger'});
+        }
+    }
+}
+
 document.addEventListener('uikit:init', () => {
     //UIKit is ready, we can work
 

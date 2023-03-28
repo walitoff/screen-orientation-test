@@ -12,4 +12,6 @@ We use two methods to obtain screen lock:
  (and screen.mozLockOrientation, screen.msLockOrientation if available)
 - new function [ScreenOrientation.lock](https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation/lock)
 
+The demo page supports PWA mode, so you can try it in normal browser and PWA modes.
+
 The website is built with Hugo.
