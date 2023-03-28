@@ -22,6 +22,10 @@
     <meta name="msapplication-TileColor" content="#603cba">
     <meta name="theme-color" content="#ffffff">
 
+    <meta property="og:title" content="{{ .Site.Title }}">
+    <meta property="og:description" content="{{ .Site.Params.Description }}">
+    <meta property="og:image" content="{{ "images/cover.jpg" | absURL}}">
+    <link property="image" href="{{ "images/cover.jpg" | absURL}}" />
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.11/dist/js/uikit.min.js"
             async
             integrity="sha256-6APb/Kno+RRKAnlMzJzlJMyXQij6e9mU4Ru5N37HQvk=" crossorigin="anonymous"></script>
@@ -31,6 +35,11 @@
 <body>
 <div class="uk-section uk-light">
     <div class="uk-container">
+        <p class="uk-text-right">
+            <a href="https://github.com/rvalitov/screen-orientation-test" target="_blank" >
+                <img src="{{ "images/github-mark-white.svg" | relURL}}" width="48" height="48" alt="GitHub logo">
+            </a>
+        </p>
         <h1 class="uk-h1 uk-text-center uk-margin-top">{{ .Site.Title }}</h1>
         <p>
             This page tests if your browser can report active device screen orientation and if it's possible to change
@@ -45,7 +54,25 @@
                 ScreenOrientation.lock
             </a>.
         </p>
-        <form class="uk-text-center">
+        <p class="uk-text-center">
+            How to test?
+        </p>
+        <ol>
+            <li>Rotate your device in hands, the page should detect screen orientation change and display current state.
+            <li>Try to change the screen orientation programmatically by clicking the buttons with the desired screen
+                orientation. Please note that not all orientation types may be supported by your device. Probably it
+                will not work if you're not in fullscreen mode.
+            </li>
+            <li>Try clicking fullscreen mode button. Most modern browsers require fullscreen mode activated to allow
+                rotations.
+            </li>
+            <li>Try different browsers. The results can vary a lot.</li>
+            <li>Install the website as an app (PWA) and try the previous steps.</li>
+        </ol>
+        <p>
+            Source code and test instructions are in <a href="https://github.com/rvalitov/screen-orientation-test" target="_blank">GitHub</a>.
+        </p>
+        <form class="uk-text-center uk-margin">
             <div>
                 <label class="uk-form-label" for="browserVersion">
                     Your browser version
