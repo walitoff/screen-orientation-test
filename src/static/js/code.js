@@ -103,8 +103,8 @@ function start() {
         orientation = null;
     }
     printScreenOrientation(orientation);
-
-    document.getElementById("fullscreen-support").innerHTML = (document.fullscreenEnabled ? "supported" : "not supported");
+    
+    document.getElementById("fullscreen-support").innerHTML = ((typeof document.fullscreenEnabled !== "undefined" && document.fullscreenEnabled) ? "supported" : "not supported");
 }
 
 if (typeof UIkit !== "undefined" && UIkit._initialized)
