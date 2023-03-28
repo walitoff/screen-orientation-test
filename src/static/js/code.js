@@ -66,9 +66,7 @@ function toggleFullscreenMode() {
     }
 }
 
-document.addEventListener('uikit:init', () => {
-    //UIKit is ready, we can work
-
+function start() {
     console.log("Started");
     var orientationElement = document.getElementById("activeOrientation");
 
@@ -106,4 +104,13 @@ document.addEventListener('uikit:init', () => {
     }
     printScreenOrientation(orientation);
 
-})
+    document.getElementById("fullscreen-support").innerHTML = (document.fullscreenEnabled ? "supported" : "not supported");
+}
+
+if (typeof UIkit !== "undefined" && UIkit._initialized)
+    start();
+else
+    document.addEventListener('uikit:init', () => {
+        //UIKit is ready, we can work
+        start();
+    })
