@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow,nocache,nosnippet,noarchive,noodp,noydir"/>
+    <meta name="description" content='{{ .Site.Params.Description }}'/>
+    <meta name="author" content='{{ .Site.Params.Author }}'/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.16.11/dist/css/uikit.min.css"
+          integrity="sha256-XP1nMbaNkpaqweVWm6VOZuwmiqRKXeI9fvXXU7JqXgc=" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.11/dist/js/uikit.min.js"
+            integrity="sha256-6APb/Kno+RRKAnlMzJzlJMyXQij6e9mU4Ru5N37HQvk=" crossorigin="anonymous"></script>
+    <script src="/js/code.js"></script>
+    <title>{{ .Site.Title }}</title>
+</head>
+<body>
+<div class="uk-section">
+    <div class="uk-container">
+        <h1 class="uk-h1 uk-text-center uk-margin-top">{{ .Site.Title }}</h1>
+        <p>
+            This page tests if your browser can report active device screen orientation and if it's possible to change
+            and lock the screen orientation programmatically with JS.
+            We use two methods to obtain lock: old deprecated function
+            <a href="https://developer.mozilla.org/en-US/docs/Web/API/Screen/lockOrientation" target="_blank">
+                screen.lockOrientation
+            </a>
+            (and screen.mozLockOrientation, screen.msLockOrientation if available)
+            and new function
+            <a href="https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation/lock" target="_blank">
+                ScreenOrientation.lock
+            </a>.
+        </p>
+        <form class="uk-text-center">
+            <div>
+                <label class="uk-form-label" for="activeOrientation">
+                    Current screen orientation
+                </label>
+            </div>
+            <div>
+                <div class="uk-form-controls">
+                    <input class="uk-input uk-form-width-medium uk-text-center" id="activeOrientation" type="text" readonly>
+                </div>
+            </div>
+            <div class="uk-margin">
+                Select orientation to change and lock
+            </div>
+            <div class="uk-flex uk-flex-middle uk-flex-center">
+                <div class="uk-grid-match uk-child-width-1-2 uk-width-xlarge uk-grid-small" uk-grid>
+                    {{ range .Site.Data.orientations}}
+                    {{if . }}
+                    <a onclick="lockOrientation('{{.id}}')" class="uk-link-reset">
+                        <div id="{{.id}}" class="uk-card uk-card-body uk-card-default">
+                            <div>
+                                <img src="/images/phone.jpg" class="phone"
+                                     style="transform: rotate({{.rotation}}deg)"
+                                >
+                            </div>
+                            <div class="uk-text-center">
+                                {{.title}}
+                            </div>
+                        </div>
+                    </a>
+                    {{end}}
+                    {{end}}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

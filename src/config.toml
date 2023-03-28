@@ -1,0 +1,13 @@
+baseURL = 'http://example.org/'
+languageCode = 'en-us'
+title = 'Device Screen Orientation Web Test'
+
+disableHugoGeneratorInject = true
+cleanDestinationDir = true
+disableSitemap = true
+disableKinds = ["page", "section", "taxonomy", "term", "RSS", "sitemap"]
+enableRobotsTXT = false
+
+[params]
+    author = "Ramil Valitov"
+    description = "Tests if your device and browser support programmatically getting and locking screen orientation with JS."

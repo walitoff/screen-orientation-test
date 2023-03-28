@@ -1,0 +1,17 @@
+[orientations]
+    [landscape-primary]
+        id="landscape-primary"
+        title="Landscape Primary"
+        rotation=90
+    [landscape-secondary]
+        id="landscape-secondary"
+        title="Landscape Secondary"
+        rotation=270
+    [portrait-primary]
+        id="portrait-primary"
+        title="Portrait Primary"
+        rotation=0
+    [portrait-secondary]
+        id="portrait-secondary"
+        title="Portrait Secondary"
+        rotation=180

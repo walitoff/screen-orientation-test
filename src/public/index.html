@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow,nocache,nosnippet,noarchive,noodp,noydir"/>
+    <meta name="description" content='Tests if your device and browser support programmatically getting and locking screen orientation with JS.'/>
+    <meta name="author" content='Ramil Valitov'/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.16.11/dist/css/uikit.min.css"
+          integrity="sha256-XP1nMbaNkpaqweVWm6VOZuwmiqRKXeI9fvXXU7JqXgc=" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.11/dist/js/uikit.min.js"
+            integrity="sha256-6APb/Kno+RRKAnlMzJzlJMyXQij6e9mU4Ru5N37HQvk=" crossorigin="anonymous"></script>
+    <script src="/js/code.js"></script>
+    <title>Device Screen Orientation Web Test</title>
+</head>
+<body>
+<div class="uk-section">
+    <div class="uk-container">
+        <h1 class="uk-h1 uk-text-center uk-margin-top">Device Screen Orientation Web Test</h1>
+        <p>
+            This page tests if your browser can report active device screen orientation and if it&#39;s possible to change and lock the screen orientation programmatically with JS
+        </p>
+        <form class="uk-text-center">
+            <div>
+                <label class="uk-form-label" for="activeOrientation">
+                    Current screen orientation
+                </label>
+            </div>
+            <div>
+                <div class="uk-form-controls">
+                    <input class="uk-input uk-form-width-medium uk-text-center" id="activeOrientation" type="text" readonly>
+                </div>
+            </div>
+            <div class="uk-margin">
+                Select orientation to change and lock
+            </div>
+            
+        </form>
+    </div>
+</div>
+</body>
+</html>
