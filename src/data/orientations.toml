@@ -1,17 +1,41 @@
 [orientations]
+    [natural]
+        id="natural"
+        title="Natural"
+        rotation=0
+        weight=2
+    [any]
+        id="any"
+        title="Any"
+        rotation=0
+        weight=1
+    [landscape]
+        id="landscape"
+        title="Landscape"
+        rotation=90
+        weight=30
     [landscape-primary]
         id="landscape-primary"
         title="Landscape Primary"
         rotation=90
+        weight=31
     [landscape-secondary]
         id="landscape-secondary"
         title="Landscape Secondary"
         rotation=270
+        weight=32
+    [portrait]
+        id="portrait"
+        title="Portrait"
+        rotation=0
+        weight=40
     [portrait-primary]
         id="portrait-primary"
         title="Portrait Primary"
         rotation=0
+        weight=41
     [portrait-secondary]
         id="portrait-secondary"
         title="Portrait Secondary"
         rotation=180
+        weight=42
