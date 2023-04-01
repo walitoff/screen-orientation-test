@@ -1,26 +1,35 @@
-"use strict";
-
+/**
+ * Locks browser screen orientation
+ * @param orientation {"any" | "landscape" | "landscape-primary" | "landscape-secondary" | "natural" | "portrait" |
+ * "portrait-primary" | "portrait-secondary"}
+ */
+// eslint-disable-next-line no-unused-vars
 function lockOrientation(orientation) {
-    var oldLockFunction = null;
-    var isNew = false;
+    "use strict";
+
+    let oldLockFunction;
+    let isNew = false;
 
     UIkit.notification.closeAll();
     try {
         oldLockFunction = screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation;
     } catch (e) {
+        oldLockFunction = null;
     }
-    var myScreenOrientation = null;
+    let myScreenOrientation;
     try {
         myScreenOrientation = window.screen.orientation;
-        if (myScreenOrientation && myScreenOrientation.lock)
+        if (myScreenOrientation && myScreenOrientation.lock) {
             isNew = true;
+        }
     } catch (e) {
+        myScreenOrientation = null;
     }
     if (!oldLockFunction && !isNew) {
         UIkit.notification("Screen orientation lock functions are not supported by this browser.", {status: 'danger'});
         return;
     }
-    var method = isNew ? "new method 'screen.orientation.lock'" : "old method 'screen.lockOrientation'";
+    const method = isNew ? "new method 'screen.orientation.lock'" : "old method 'screen.lockOrientation'";
     try {
         if (isNew && myScreenOrientation) {
             myScreenOrientation.lock(orientation).then(() => {
@@ -29,17 +38,21 @@ function lockOrientation(orientation) {
                 UIkit.notification(`Failed to lock with ${method}. ${error}`, {status: 'danger'});
             });
         } else if (oldLockFunction) {
-            if (oldLockFunction(orientation))
+            if (oldLockFunction(orientation)) {
                 UIkit.notification(`Lock authorized with ${method}`, {status: 'success'});
-            else
+            } else {
                 UIkit.notification(`Lock denied with ${method}`, {status: 'danger'});
+            }
         }
     } catch (e) {
         UIkit.notification(`Failed to lock with ${method}. ${e}`, {status: 'danger'});
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 function toggleFullscreenMode() {
+    "use strict";
+
     UIkit.notification.closeAll();
     if (!document.fullscreenElement) {
         console.log("Entering fullscreen mode");
@@ -67,8 +80,10 @@ function toggleFullscreenMode() {
 }
 
 function start() {
+    "use strict";
+
     console.log("Started");
-    var orientationElement = document.getElementById("activeOrientation");
+    const orientationElement = document.getElementById("activeOrientation");
 
     /**
      * Gets current screen orientation
@@ -76,11 +91,12 @@ function start() {
      */
     function getScreenOrientation() {
         try {
-            if (screen.orientation.type)
+            if (screen.orientation.type) {
                 return screen.orientation.type;
+            }
         } catch (e) {
+            return null;
         }
-        return null;
     }
 
     /**
@@ -88,30 +104,40 @@ function start() {
      * @param value OrientationType|null
      */
     function printScreenOrientation(value) {
-        if (!value)
+        if (!value) {
             value = "The orientation API isn't supported in this browser :(";
+        }
         orientationElement.value = value;
     }
 
-    var orientation = getScreenOrientation();
+    let orientation = getScreenOrientation();
     try {
         screen.orientation.addEventListener('change',
             function () {
                 printScreenOrientation(getScreenOrientation());
-            })
+            });
     } catch (e) {
         orientation = null;
     }
     printScreenOrientation(orientation);
 
-    document.getElementById("fullscreen-support").innerHTML = ((typeof document.fullscreenEnabled !== "undefined" && document.fullscreenEnabled) ? "supported" : "not supported");
+    document.getElementById("fullscreen-support")
+        .innerHTML = ((typeof document.fullscreenEnabled !== "undefined" && document.fullscreenEnabled) ?
+        "supported" : "not supported");
     document.getElementById("browserVersion").value = window.navigator.userAgent;
 }
 
-if (typeof UIkit !== "undefined" && UIkit._initialized)
-    start();
-else
-    document.addEventListener('uikit:init', () => {
-        //UIKit is ready, we can work
+(function () {
+    "use strict";
+
+    if (typeof UIkit !== "undefined" && UIkit._initialized) {
         start();
-    })
+    } else {
+        document.addEventListener('uikit:init', () => {
+            //UIKit is ready, we can work
+            start();
+        });
+    }
+}());
+
+/*exported toggleFullscreenMode, lockOrientation */
