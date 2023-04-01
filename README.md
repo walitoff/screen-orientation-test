@@ -1,3 +1,11 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5c1b2a41dee048348186f7768e9a265c)](https://app.codacy.com/gh/walitoff/screen-orientation-test/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Security Scan](https://github.com/walitoff/screen-orientation-test/actions/workflows/codacy.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/codacy.yml)
+[![Dependency Review](https://github.com/walitoff/screen-orientation-test/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/dependency-review.yml)
+[![ESLint](https://github.com/walitoff/screen-orientation-test/actions/workflows/eslint.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/eslint.yml)
+[![Own Tests](https://github.com/walitoff/screen-orientation-test/actions/workflows/node.js.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/node.js.yml)
+[![Deploy Hugo site to Pages](https://github.com/walitoff/screen-orientation-test/actions/workflows/hugo.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/hugo.yml)
+![GitHub](https://img.shields.io/github/license/walitoff/screen-orientation-test?color=blue)
+
 # Tests for programmatically getting and locking screen orientation with JS
 
 This project builds a web page for testing user's browser if it can report active device screen orientation and
