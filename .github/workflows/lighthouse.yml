@@ -16,7 +16,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  # Build job
+  # Check on PR
   lighthouse-check:
     runs-on: ubuntu-latest
     env:
@@ -78,8 +78,8 @@ jobs:
         uses: foo-software/lighthouse-check-status-action@master
         with:
           lighthouseCheckResults: ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults }}
-          minAccessibilityScore: "50"
-          minBestPracticesScore: "50"
-          minPerformanceScore: "50"
-          minProgressiveWebAppScore: "50"
-          minSeoScore: "50"
+          minAccessibilityScore: "80"
+          minBestPracticesScore: "80"
+          minPerformanceScore: "80"
+          minProgressiveWebAppScore: "70"
+          minSeoScore: "70"
