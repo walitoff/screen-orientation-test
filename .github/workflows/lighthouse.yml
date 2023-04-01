@@ -58,7 +58,7 @@ jobs:
           outputDirectory: ${{ github.workspace }}/tmp/artifacts
           configFile: ./lighthouse-config.js
           sha: ${{ github.sha }}
-          urls: 'file:///src/public/index.html'
+          urls: 'src/public/index.html'
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
