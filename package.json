@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "jshint": "jshint src",
+    "jshint": "jshint",
     "markdown": "remark . --frail",
     "markdown:fix": "remark . --frail --output",
     "stylelint": "stylelint -f verbose \"src/**/*.css\"",
