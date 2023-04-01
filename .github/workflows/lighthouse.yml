@@ -43,13 +43,6 @@ jobs:
         run: |
           hugo \
             --minify
-      - name: Run Hugo Server
-        working-directory: ./src
-        env:
-          # For maximum backward compatibility with Hugo modules
-          HUGO_ENVIRONMENT: production
-          HUGO_ENV: production
-        #run: hugo server
       - run: mkdir -p ${{ github.workspace }}/tmp/artifacts
       - name: Lighthouse
         uses: foo-software/lighthouse-check-action@master
