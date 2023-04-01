@@ -43,7 +43,8 @@ jobs:
         run: |
           hugo \
             --minify
-      - uses: actions/checkout@master
+      - name: Run Hugo Server
+        run: hugo server
       - run: mkdir -p ${{ github.workspace }}/tmp/artifacts
       - name: Lighthouse
         uses: foo-software/lighthouse-check-action@master
@@ -59,7 +60,7 @@ jobs:
           outputDirectory: ${{ github.workspace }}/tmp/artifacts
           configFile: ./lighthouse-config.js
           sha: ${{ github.sha }}
-          urls: 'https://www.foo.software,https://www.google.com'
+          urls: 'http://localhost:1313/'
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
