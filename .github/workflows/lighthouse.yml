@@ -43,6 +43,16 @@ jobs:
         run: |
           hugo \
             --minify
+      - name: Run Hugo Server
+        working-directory: ./src
+        env:
+          # For maximum backward compatibility with Hugo modules
+          HUGO_ENVIRONMENT: production
+          HUGO_ENV: production
+        # Run server in background
+        run: hugo server &
+        # Wait till the server warms up
+      - run: sleep 15
       - run: mkdir -p ${{ github.workspace }}/tmp/artifacts
       - name: Lighthouse
         uses: foo-software/lighthouse-check-action@master
@@ -58,7 +68,7 @@ jobs:
           outputDirectory: ${{ github.workspace }}/tmp/artifacts
           configFile: ./lighthouse-config.js
           sha: ${{ github.sha }}
-          urls: 'src/public/index.html'
+          urls: 'http://localhost:1313/'
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
