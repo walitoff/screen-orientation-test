@@ -1,0 +1,48 @@
+{
+  "name": "screen-orientation-test",
+  "title": "Tests for programmatically getting and locking screen orientation with JS",
+  "version": "1.0.0",
+  "description": "This project builds a web page for testing user's browser if it can report active device screen orientation and if it's possible to change and lock the screen orientation programmatically with JS. It's useful if you need to check if your iPhone or Android device supports this functionality and if you can use it in your web projects.",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "jshint": "jshint src && jshint tests",
+    "markdown": "remark . --frail",
+    "markdown:fix": "remark . --frail --output",
+    "stylelint": "stylelint -f verbose \"src/**/*.css\"",
+    "stylelint:fix": "stylelint \"src/**/*.css\" --fix",
+    "test": "npm run lint && npm run jshint && npm run stylelint && npm run markdown"
+  },
+  "remarkConfig": {
+    "plugins": [
+      "remark-preset-lint-consistent",
+      "remark-preset-lint-recommended"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/walitoff/screen-orientation-test.git"
+  },
+  "author": "Ramil Valitov (https://github.com/rvalitov)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/walitoff/screen-orientation-test/issues"
+  },
+  "homepage": "https://github.com/walitoff/screen-orientation-test",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/uikit": "^3.14.0",
+    "eslint": "^8.37.0",
+    "jshint": "^2.13.6",
+    "remark": "^14.0.2",
+    "remark-cli": "^11.0.0",
+    "remark-lint-list-item-indent": "^3.1.1",
+    "remark-preset-lint-consistent": "^5.1.1",
+    "remark-preset-lint-recommended": "^6.1.2",
+    "stylelint": "^15.4.0",
+    "stylelint-config-standard": "^31.0.0",
+    "uikit": "3.16.13"
+  }
+}

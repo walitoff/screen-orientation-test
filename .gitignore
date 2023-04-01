@@ -17,4 +17,5 @@ Thumbs.db
 
 *.xmp
 
+node_modules
 /src/public
