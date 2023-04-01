@@ -11,36 +11,38 @@ you can use it in your web projects.
 
 ## How to test
 
-1. Open the [demo page](https://screen-orientation-test.walitoff.com/)
-2. Rotate your device in hands, the page should detect screen orientation change and display current state
-3. Try to change the screen orientation programmatically by clicking the buttons with the desired screen orientation.
-   Please note that not all orientation types may be supported by your device. Probably it will not work if you're not
-   in fullscreen mode.
-4. Try clicking fullscreen mode button. Most modern browsers require fullscreen mode activated to allow rotations.
-5. Try different browsers. The results can vary a lot.
-6. Install the website as an app (PWA) and try the previous steps.
+1.  Open the [demo page](https://screen-orientation-test.walitoff.com/)
+2.  Rotate your device in hands, the page should detect screen orientation change and display current state
+3.  Try to change the screen orientation programmatically by clicking the buttons with the desired screen orientation.
+    Please note that not all orientation types may be supported by your device. Probably it will not work if you're not
+    in fullscreen mode.
+4.  Try clicking fullscreen mode button. Most modern browsers require fullscreen mode activated to allow rotations.
+5.  Try different browsers. The results can vary a lot.
+6.  Install the website as an app (PWA) and try the previous steps.
 
 ## Sample videos
 
 #### Example 1. Android 10 Chrome browser 111.0.5563.116
+
 Supports orientation detection, full screen mode activation and programmatically change and lock of screen orientation.
 
-https://user-images.githubusercontent.com/16267156/228314972-484a3d26-2468-4af5-b5d1-ea0756f3d021.mp4 
+https://user-images.githubusercontent.com/16267156/228314972-484a3d26-2468-4af5-b5d1-ea0756f3d021.mp4
 
 #### Example 2. Android 10, PWA mode, Chrome browser 111.0.0.0
-Supports orientation detection, 
+
+Supports orientation detection,
 full screen mode activation and programmatically change and lock of screen orientation.
 
 https://user-images.githubusercontent.com/16267156/228315368-6000ce6e-4bb2-48ff-9773-a1669d318094.mp4
 
 #### Example 3. Android 10 DuckDuckGo 5.153.0
-Supports orientation detection, 
+
+Supports orientation detection,
 full screen mode activation. Programmatically change and lock of screen orientation is not supported.
 
 https://user-images.githubusercontent.com/16267156/228315395-b41aeb8d-45a4-411f-a03d-95c56014cb5b.mp4
 
 ## Some test results
-
 
 | Browser                      |         OS         |  Type   |  Mode   | Detection | Fullscreen Mode | Rotation |
 |------------------------------|:------------------:|:-------:|:-------:|:---------:|:---------------:|:--------:|
@@ -61,10 +63,10 @@ If you want to share your test results, please open an issue or PR.
 
 We use two methods to obtain screen lock:
 
-- old deprecated
-  function [screen.lockOrientation](https://developer.mozilla.org/en-US/docs/Web/API/Screen/lockOrientation)
-  (and screen.mozLockOrientation, screen.msLockOrientation if available)
-- new function [ScreenOrientation.lock](https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation/lock)
+*   old deprecated
+    function [screen.lockOrientation](https://developer.mozilla.org/en-US/docs/Web/API/Screen/lockOrientation)
+    (and screen.mozLockOrientation, screen.msLockOrientation if available)
+*   new function [ScreenOrientation.lock](https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation/lock)
 
 Some devices like desktop computers usually don't support screen rotation.
 If device does not support rotation, you will get such message.
@@ -73,7 +75,7 @@ support for the screen rotation API.
 
 Usually the screen rotation lock requires the fullscreen mode first to be activated in browser.
 There's a button to enter and exit fullscreen mode in the demo
-using [Element.requestFullscreen()](https://developer.mozilla.org/en-US/docs/Web/API/Element/requestFullscreen).  
+using [Element.requestFullscreen()](https://developer.mozilla.org/en-US/docs/Web/API/Element/requestFullscreen).\
 Fullscreen mode is supported by most [modern browsers](https://caniuse.com/mdn-api_document_fullscreen).
 
 The website is built with Hugo.
