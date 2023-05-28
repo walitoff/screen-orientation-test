@@ -38,7 +38,7 @@
     "jshint": "^2.13.6",
     "remark": "^14.0.2",
     "remark-cli": "^11.0.0",
-    "remark-lint-list-item-indent": "^3.1.1",
+    "remark-lint-list-item-indent": "^3.1.2",
     "remark-preset-lint-consistent": "^5.1.2",
     "remark-preset-lint-recommended": "^6.1.2",
     "stylelint": "^15.6.2",
