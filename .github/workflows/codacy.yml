@@ -36,7 +36,7 @@ jobs:
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout code
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
       # Execute Codacy Analysis CLI and generate a SARIF output with the security issues identified during the analysis
       - name: Run Codacy Analysis CLI
@@ -46,10 +46,10 @@ jobs:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           output: results.sarif
           format: sarif
-          # Adjust severity of non-security issues
+          # Adjust the severity of non-security issues
           gh-code-scanning-compat: true
           # Force 0 exit code to allow SARIF file generation
-          # This will handover control about PR rejection to the GitHub side
+          # This will hand over control about PR rejection to the GitHub side
           max-allowed-issues: 2147483647
 
       # Upload the SARIF file generated in the previous step
@@ -64,7 +64,7 @@ jobs:
     if: github.event_name == 'push'
     steps:
       - name: Checkout code
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
       - name: Run Codacy Analysis CLI
         uses: codacy/codacy-analysis-cli-action@master
