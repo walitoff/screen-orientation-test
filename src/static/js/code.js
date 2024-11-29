@@ -3,7 +3,6 @@
  * @param orientation {"any" | "landscape" | "landscape-primary" | "landscape-secondary" | "natural" | "portrait" |
  * "portrait-primary" | "portrait-secondary"}
  */
-// eslint-disable-next-line no-unused-vars
 function lockOrientation(orientation) {
     "use strict";
 
@@ -14,6 +13,7 @@ function lockOrientation(orientation) {
     try {
         oldLockFunction = screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation;
     } catch (e) {
+        console.debug("Old lock function not found", e.message);
         oldLockFunction = null;
     }
     let myScreenOrientation;
@@ -23,6 +23,7 @@ function lockOrientation(orientation) {
             isNew = true;
         }
     } catch (e) {
+        console.debug("New lock function not found", e.message);
         myScreenOrientation = null;
     }
     if (!oldLockFunction && !isNew) {
@@ -49,7 +50,6 @@ function lockOrientation(orientation) {
     }
 }
 
-// eslint-disable-next-line no-unused-vars
 function toggleFullscreenMode() {
     "use strict";
 
@@ -95,6 +95,7 @@ function start() {
                 return screen.orientation.type;
             }
         } catch (e) {
+            console.debug("Orientation API not supported", e.message);
             return null;
         }
     }
@@ -117,6 +118,7 @@ function start() {
                 printScreenOrientation(getScreenOrientation());
             });
     } catch (e) {
+        console.debug("Orientation change event not supported", e.message);
         orientation = null;
     }
     printScreenOrientation(orientation);
