@@ -1,7 +1,6 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5c1b2a41dee048348186f7768e9a265c)](https://app.codacy.com/gh/walitoff/screen-orientation-test/dashboard?utm_source=gh\&utm_medium=referral\&utm_content=\&utm_campaign=Badge_grade)
 [![Codacy Security Scan](https://github.com/walitoff/screen-orientation-test/actions/workflows/codacy.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/codacy.yml)
 [![Dependency Review](https://github.com/walitoff/screen-orientation-test/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/dependency-review.yml)
-[![ESLint](https://github.com/walitoff/screen-orientation-test/actions/workflows/eslint.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/eslint.yml)
 [![Own Tests](https://github.com/walitoff/screen-orientation-test/actions/workflows/node.js.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/node.js.yml)
 [![Deploy Hugo site to Pages](https://github.com/walitoff/screen-orientation-test/actions/workflows/hugo.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/hugo.yml)
 ![GitHub](https://img.shields.io/github/license/walitoff/screen-orientation-test?color=blue)
@@ -30,25 +29,25 @@ you can use it in your web projects.
 
 ## Sample videos
 
-#### Example 1. Android 10 Chrome browser 111.0.5563.116
+### Example 1. Android 10 Chrome browser 111.0.5563.116
 
 Supports orientation detection, full-screen mode activation and programmatically change and lock of screen orientation.
 
-https://user-images.githubusercontent.com/16267156/228314972-484a3d26-2468-4af5-b5d1-ea0756f3d021.mp4
+<https://user-images.githubusercontent.com/16267156/228314972-484a3d26-2468-4af5-b5d1-ea0756f3d021.mp4>
 
-#### Example 2. Android 10, PWA mode, Chrome browser 111.0.0.0
+### Example 2. Android 10, PWA mode, Chrome browser 111.0.0.0
 
 Supports orientation detection,
 full-screen mode activation and programmatically change and lock of screen orientation.
 
-https://user-images.githubusercontent.com/16267156/228315368-6000ce6e-4bb2-48ff-9773-a1669d318094.mp4
+<https://user-images.githubusercontent.com/16267156/228315368-6000ce6e-4bb2-48ff-9773-a1669d318094.mp4>
 
-#### Example 3. Android 10 DuckDuckGo 5.153.0
+### Example 3. Android 10 DuckDuckGo 5.153.0
 
 Supports orientation detection, full-screen mode activation.
 Programmatically change and lock of screen orientation is not supported.
 
-https://user-images.githubusercontent.com/16267156/228315395-b41aeb8d-45a4-411f-a03d-95c56014cb5b.mp4
+<https://user-images.githubusercontent.com/16267156/228315395-b41aeb8d-45a4-411f-a03d-95c56014cb5b.mp4>
 
 ## Some test results
 
