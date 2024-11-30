@@ -4,6 +4,7 @@
 [![Codacy Security Scan](https://github.com/walitoff/screen-orientation-test/actions/workflows/codacy.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/codacy.yml)
 [![Dependency Review](https://github.com/walitoff/screen-orientation-test/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/dependency-review.yml)
 [![Own Tests](https://github.com/walitoff/screen-orientation-test/actions/workflows/node.js.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/node.js.yml)
+[![Build test](https://github.com/walitoff/screen-orientation-test/actions/workflows/build-test.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/build-test.yml)
 [![Deploy Hugo site to Pages](https://github.com/walitoff/screen-orientation-test/actions/workflows/hugo.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/hugo.yml)
 ![GitHub](https://img.shields.io/github/license/walitoff/screen-orientation-test?color=blue)
 
