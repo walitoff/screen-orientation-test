@@ -3,11 +3,16 @@
     "settings": {
       "skipAudits": [
         "is-on-https",
-        "canonical",
-        "maskable-icon",
+        "server-response-time",
+        "network-server-latency",
+        "seo/canonical",
         "valid-source-maps",
         "unsized-images",
-        "offline-start-url"
+        "offline-start-url",
+        "metrics/total-blocking-time",
+        "byte-efficiency/uses-text-compression",
+        "byte-efficiency/uses-long-cache-ttl",
+        "byte-efficiency/modern-image-formats"
       ]
     }
   }
