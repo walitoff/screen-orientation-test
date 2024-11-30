@@ -42,8 +42,8 @@
         </p>
         <h1 class="uk-h1 uk-text-center uk-margin-top">{{ .Site.Title }}</h1>
         <p>
-            This page tests if your browser can report active device screen orientation and if it's possible to change
-            and lock the screen orientation programmatically with JS.
+            This page makes a test if your browser can report active device screen orientation,
+            and if it's possible to change and lock the screen orientation programmatically with JS.
             We use two methods to obtain lock: old deprecated function
             <a href="https://developer.mozilla.org/en-US/docs/Web/API/Screen/lockOrientation" target="_blank">
                 screen.lockOrientation
@@ -58,13 +58,14 @@
             How to test?
         </p>
         <ol>
-            <li>Rotate your device in hands, the page should detect screen orientation change and display current state.
+            <li>Rotate your device, the page should detect screen orientation change and display the current state.
             <li>Try to change the screen orientation programmatically by clicking the buttons with the desired screen
-                orientation. Please note that not all orientation types may be supported by your device. Probably it
-                will not work if you're not in fullscreen mode.
+                orientation.
+                Please note that your device may support only some orientation types.
+                Probably it will not work if you're not in fullscreen mode.
             </li>
-            <li>Try clicking fullscreen mode button. Most modern browsers require fullscreen mode activated to allow
-                rotations.
+            <li>Try clicking the fullscreen mode button.
+                Most modern browsers require fullscreen mode activated to allow rotations.
             </li>
             <li>Try different browsers. The results can vary a lot.</li>
             <li>Install the website as an app (PWA) and try the previous steps.</li>

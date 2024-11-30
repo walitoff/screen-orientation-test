@@ -1,5 +1,6 @@
 import js from "@eslint/js";
 import globals from "globals";
+import eslintPluginYml from 'eslint-plugin-yml';
 
 export default [
     js.configs.recommended, // Recommended config applied to all files
@@ -29,4 +30,5 @@ export default [
             "src/public/**/*",
         ],
     },
+    ...eslintPluginYml.configs['flat/recommended']
 ];
