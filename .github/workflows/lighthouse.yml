@@ -55,7 +55,7 @@ jobs:
       - run: sleep 15
       - run: mkdir -p ${{ github.workspace }}/tmp/artifacts
       - name: Lighthouse
-        uses: foo-software/lighthouse-check-action@v12
+        uses: foo-software/lighthouse-check-action@v12.0.1
         id: lighthouseCheck
         with:
           device: 'all'
@@ -77,7 +77,7 @@ jobs:
           name: Lighthouse reports
           path: ${{ github.workspace }}/tmp/artifacts
       - name: Verify Lighthouse Check results
-        uses: foo-software/lighthouse-check-status-action@v3
+        uses: foo-software/lighthouse-check-status-action@v3.0.1
         with:
           lighthouseCheckResults: ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults }}
           minAccessibilityScore: "80"
