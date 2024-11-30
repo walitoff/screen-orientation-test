@@ -30,11 +30,5 @@ export default [
             "src/public/**/*",
         ],
     },
-    ...eslintPluginYml.configs['flat/recommended'],
-    {
-        rules: {
-            // override/add rules settings here, such as:
-            // 'yml/rule-name': 'error'
-        }
-    }
+    ...eslintPluginYml.configs['flat/recommended']
 ];
