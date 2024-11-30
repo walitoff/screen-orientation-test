@@ -8,12 +8,15 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "jshint": "jshint",
+    "spectral": "spectral lint ./.github/*.yml",
+    "json": "jsonlint -q ./*.json",
+    "package": "npx npm-package-json-lint .",
     "markdown": "remark . --frail",
     "markdownlint": "markdownlint --config .markdownlint.json \"src/**/*.md\" \"*.md\"",
     "markdown:fix": "remark . --frail --output",
     "stylelint": "stylelint -f verbose \"src/**/*.css\"",
     "stylelint:fix": "stylelint \"src/**/*.css\" --fix",
-    "test": "npm run lint && npm run jshint && npm run stylelint && npm run markdown"
+    "test": "npm run lint && npm run jshint && npm run stylelint && npm run markdown && npm run markdownlint && npm run spectral && npm run package && npm run json"
   },
   "remarkConfig": {
     "plugins": [
@@ -35,6 +38,10 @@
     "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
   },
   "devDependencies": {
+    "@prantlf/jsonlint": "^16.0.0",
+    "@stoplight/spectral-cli": "^6.14.2",
+    "npm-package-json-lint": "^8.0.0",
+    "npm-package-json-lint-config-default": "^7.0.1",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.15.0",
     "@types/uikit": "^3.14.0",
