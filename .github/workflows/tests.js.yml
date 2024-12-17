@@ -1,0 +1,320 @@
+# Main test workflow
+
+name: Tests
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  HUGO_VERSION: 0.139.3
+  NODE_VERSION: 23.x
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [ latest, 23.x, 22.x, 21, 20.x ]
+
+    steps:
+      - name: Install Hugo CLI
+        run: |
+          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${{ env.HUGO_VERSION }}/hugo_extended_${{ env.HUGO_VERSION }}_linux-amd64.deb \
+          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
+      - name: Install Dart Sass Embedded
+        run: sudo snap install dart-sass-embedded
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install Node.js dependencies
+        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+      - run: npm test
+
+  # Make a Lighthouse Report
+  Lighthouse:
+    needs: Build
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Required to upload/save artifact, otherwise you'll get
+      # "Error: Resource not accessible by integration"
+      contents: write
+      # Required to post comment, otherwise you'll get
+      # "Error: Resource not accessible by integration"
+      pull-requests: write
+    steps:
+      - name: Install Hugo CLI
+        run: |
+          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${{ env.HUGO_VERSION }}/hugo_extended_${{ env.HUGO_VERSION }}_linux-amd64.deb \
+          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
+      - name: Install Dart Sass Embedded
+        run: sudo snap install dart-sass-embedded
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - name: Install Node.js dependencies
+        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+      - run: npm run build --if-present
+      - name: Build with Hugo
+        working-directory: ./src
+        env:
+          # For maximum backward compatibility with Hugo modules
+          HUGO_ENVIRONMENT: production
+          HUGO_ENV: production
+        run: |
+          hugo \
+            --minify
+      - name: Run Hugo Server
+        working-directory: ./src
+        env:
+          # For maximum backward compatibility with Hugo modules
+          HUGO_ENVIRONMENT: production
+          HUGO_ENV: production
+        # Run server in background
+        run: hugo server &
+        # Wait till the server warms up
+      - run: sleep 15
+      - name: Run Lighthouse Desktop
+        run: npm run lighthouse-desktop
+      - name: Run Lighthouse Mobile
+        run: npm run lighthouse-mobile
+      - name: Make Lighthouse Mobile Report Screenshot
+        run: npm run screenshot:mobile
+      - name: Make Lighthouse Desktop Report Screenshot
+        run: npm run screenshot:desktop
+      - name: Upload Lighthouse Report
+        id: lighthouseUploadReport
+        uses: actions/upload-artifact@master
+        with:
+          name: Lighthouse-report
+          path: |
+            desktop.report.html
+            desktop.report.json
+            mobile.report.html
+            mobile.report.json
+      - name: Upload files to Imgbb
+        id: upload-files-imgbb
+        uses: McCzarny/upload-image@v1.3.0
+        with:
+          path: |
+            mobile.jpg
+            desktop.jpg
+          uploadMethod: imgbb
+          apiKey: '${{ secrets.IMGBB_API_KEY }}'
+          # Images will be automatically deleted after 30 days
+          expiration: 86400
+      - name: Publish info
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ### Lighthouse Report
+            |  Mobile  |  Desktop |
+            |----|----|
+            | ![Lighthouse Mobile Report Score](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[0]}}) | ![Lighthouse Desktop Report Score](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[1]}}) |
+
+            [Download report ZIP](${{ steps.lighthouseUploadReport.outputs.artifact-url }})
+
+
+  # Make screenshots of the resulting page
+  Screenshots:
+    needs: Build
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Required to upload/save artifact, otherwise you'll get
+      # "Error: Resource not accessible by integration"
+      contents: write
+      # Required to post comment, otherwise you'll get
+      # "Error: Resource not accessible by integration"
+      pull-requests: write
+    steps:
+      - name: Install Hugo CLI
+        run: |
+          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${{ env.HUGO_VERSION }}/hugo_extended_${{ env.HUGO_VERSION }}_linux-amd64.deb \
+          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
+      - name: Install Dart Sass Embedded
+        run: sudo snap install dart-sass-embedded
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - name: Install Node.js dependencies
+        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+      - run: npm run build --if-present
+      - name: Build with Hugo
+        working-directory: ./src
+        env:
+          # For maximum backward compatibility with Hugo modules
+          HUGO_ENVIRONMENT: production
+          HUGO_ENV: production
+        run: |
+          hugo \
+            --minify
+      - name: Make screenshots
+        run: npm run screenshot
+      - name: Upload files as artifacts
+        id: upload-files-artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: Screenshots
+          path: |
+            src/public/index.html
+            ./*.jpg
+      - name: Upload files to Imgbb
+        id: upload-files-imgbb
+        uses: McCzarny/upload-image@v1.3.0
+        with:
+          # Device viewport sizes https://blisk.io/devices
+          path: |
+            320x568.jpg
+            568x320.jpg
+            360x780.jpg
+            780x360.jpg
+            375x812.jpg
+            812x375.jpg
+            390x844.jpg
+            844x390.jpg
+            430x932.jpg
+            932x430.jpg
+            768x1024.jpg
+            1024x768.jpg
+            810x1080.jpg
+            1080x810.jpg
+            834x1112.jpg
+            1112x834.jpg
+            1024x1366.jpg
+            1366x1024.jpg
+            1440x900.jpg
+            2304x1440.jpg
+            1280x800.jpg
+            1366x768.jpg
+            2560x1440.jpg
+            1920x1080.jpg
+            3200x1800.jpg
+            2048x1152.jpg
+          uploadMethod: imgbb
+          apiKey: '${{ secrets.IMGBB_API_KEY }}'
+          # Images will be automatically deleted after 30 days
+          expiration: 86400
+      - name: Publish the images
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            #### Screenshots
+            
+            <details>
+            <summary>Smartphones</summary>
+            
+            #### iPhone 5 (320x568)
+            
+            |  Portrait Mode  |  Landscape Mode |
+            |----|----|
+            | ![iPhone 5 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[0]}}) | ![iPhone 5 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[1]}}) |
+
+            #### Honor 20 Pro (360x780)
+            
+            |  Portrait Mode  |  Landscape Mode |
+            |----|----|
+            | ![Honor 20 Pro portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[2]}}) | ![Honor 20 Pro portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[3]}}) |
+
+            #### iPhone X (375x812)
+            
+            |  Portrait Mode  |  Landscape Mode |
+            |----|----|
+            | ![iPhone X portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[4]}}) | ![iPhone X portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[5]}}) |
+
+            #### iPhone 12/13 Pro (390x844)
+            
+            |  Portrait Mode  |  Landscape Mode |
+            |----|----|
+            | ![iPhone 12 Pro portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[6]}}) | ![iPhone 12 Pro portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[7]}}) |
+
+            #### iPhone 14/15 Pro Max (430x932)
+            
+            |  Portrait Mode  |  Landscape Mode |
+            |----|----|
+            | ![iPhone 14 Pro Max portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[8]}}) | ![iPhone 14 Pro Max portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[9]}}) |
+            
+            </details>
+
+            <details>
+            <summary>Tablets</summary>
+            
+            #### iPad Mini 4 / Pro 9 (768x1024)
+            
+            |  Portrait Mode  |  Landscape Mode |
+            |----|----|
+            | ![iPad Mini portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[10]}}) | ![iPad Mini portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[11]}}) |
+
+            #### iPad 10 (810x1080)
+            
+            |  Portrait Mode  |  Landscape Mode |
+            |----|----|
+            | ![iPad 10 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[12]}}) | ![iPad 10 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[13]}}) |
+
+            #### iPad Pro 10 (834x1112)
+            
+            |  Portrait Mode  |  Landscape Mode |
+            |----|----|
+            | ![iPad Pro 10 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[14]}}) | ![iPad Pro 10 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[15]}}) |
+
+            #### iPad Pro 12 (1024x1366)
+            
+            |  Portrait Mode  |  Landscape Mode |
+            |----|----|
+            | ![iPad Pro 12 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[16]}}) | ![iPad Pro 12 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[17]}}) |
+            
+            </details>
+
+            <details>
+            <summary>Notebooks</summary>
+            
+            |  MacBook Air 13.3"/15.4" (1440x900) |  MacBook 12" (2304x1440) |
+            |----|----|
+            | ![MacBook Air 13.3" screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[18]}}) | ![MacBook 12" screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[19]}}) |
+
+            |  Laptop-S 1280x800 |  Laptop-M 1366x768 |
+            |----|----|
+            | ![Laptop-S 1280x800 screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[20]}}) | ![Laptop-M 1366x768 screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[21]}}) |
+            
+            </details>
+
+            <details>
+            <summary>Desktop</summary>
+
+            |  2560x1440 |  1920x1080 |
+            |----|----|
+            | ![2560x1440 screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[22]}}) | ![1920x1080 screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[23]}}) |
+
+            |  iMac Pro Retina 5K 27" (3200x1800) |  iMac Retina 4K 21.5" (2048x1152) |
+            |----|----|
+            | ![iMac Pro Retina 5K 27" screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[24]}}) | ![iMac Retina 4K 21.5" screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[25]}}) |
+            
+            </details>
+
+            [Full ZIP](${{ steps.upload-files-artifacts.outputs.artifact-url }})
