@@ -1,40 +1,42 @@
 {
   "name": "screen-orientation-test",
-  "title": "Tests for programmatically getting and locking screen orientation with JS",
   "version": "1.0.0",
   "description": "This project builds a web page for testing user's browser if it can report active device screen orientation and if it's possible to change and lock the screen orientation programmatically with JS. It's useful if you need to check if your iPhone or Android device supports this functionality and if you can use it in your web projects.",
-  "type": "module",
+  "homepage": "https://github.com/walitoff/screen-orientation-test",
+  "bugs": {
+    "url": "https://github.com/walitoff/screen-orientation-test/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/walitoff/screen-orientation-test.git"
+  },
+  "license": "GPL-3.0",
+  "author": "Ramil Valitov (https://github.com/rvalitov)",
   "scripts": {
+    "build": "cd ./src && hugo --minify --environment production",
+    "json": "jsonlint -q ./*.json",
+    "lighthouse-desktop": "npx lighthouse http://localhost:1313/ --no-enable-error-reporting --output-path=./desktop --output=html --output=json --config-path=./lr-desktop-config.js --chrome-flags=\"--no-sandbox --headless --disable-gpu --disable-dev-shm-usage\"",
+    "lighthouse-mobile": "npx lighthouse http://localhost:1313/ --no-enable-error-reporting --output-path=./mobile --output=html --output=json --config-path=./lr-mobile-config.js --chrome-flags=\"--no-sandbox --headless --disable-gpu --disable-dev-shm-usage\"",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "jshint": "jshint",
-    "json": "jsonlint -q ./*.json",
-    "package": "npx npm-package-json-lint .",
     "markdown": "remark . --frail",
-    "markdownlint": "markdownlint --config .markdownlint.json \"src/**/*.md\" \"*.md\"",
     "markdown:fix": "remark . --frail --output",
+    "markdownlint": "markdownlint --config .markdownlint.json \"src/**/*.md\" \"*.md\"",
+    "package": "npx npm-package-json-lint .",
+    "screenshot": "pageres ./src/public/index.html 320x568 568x320 360x780 780x360 375x812 812x375 390x844 844x390 430x932 932x430 768x1024 1024x768 810x1080 1080x810 834x1112 1112x834 1024x1366 1366x1024 1440x900 2304x1440 1280x800 1366x768 2560x1440 1920x1080 3200x1800 2048x1152 --overwrite --format=jpg --crop --filename=\"<%= size %>\"",
+    "screenshot:desktop": "pageres ./desktop.report.html 800x1000 --overwrite --format=jpg --crop --filename=\"desktop\"",
+    "screenshot:mobile": "pageres ./mobile.report.html 800x1000 --overwrite --format=jpg --crop --filename=\"mobile\"",
+    "sort": "sort-package-json ./package.json",
+    "start-server": "cd ./src && hugo server --environment production",
     "stylelint": "stylelint -f verbose \"src/**/*.css\"",
     "stylelint:fix": "stylelint \"src/**/*.css\" --fix",
-    "test": "npm run lint && npm run jshint && npm run stylelint && npm run markdown && npm run markdownlint && npm run package && npm run json"
+    "test": "npm run lint && npm run stylelint && npm run markdown && npm run markdownlint && npm run package && npm run json"
   },
   "remarkConfig": {
     "plugins": [
       "remark-preset-lint-consistent",
       "remark-preset-lint-recommended"
     ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/walitoff/screen-orientation-test.git"
-  },
-  "author": "Ramil Valitov (https://github.com/rvalitov)",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/walitoff/screen-orientation-test/issues"
-  },
-  "homepage": "https://github.com/walitoff/screen-orientation-test",
-  "engines": {
-    "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -44,16 +46,24 @@
     "eslint": "^9.16.0",
     "eslint-plugin-yml": "^1.16.0",
     "globals": "^15.12.0",
+    "lighthouse": "^12.3.0",
     "markdownlint-cli": "^0.43.0",
     "npm-package-json-lint": "^8.0.0",
     "npm-package-json-lint-config-default": "^7.0.1",
+    "pageres": "^8.1.0",
+    "pageres-cli": "^8.0.0",
     "remark": "^15.0.1",
     "remark-cli": "^12.0.1",
     "remark-lint-list-item-indent": "^4.0.0",
     "remark-preset-lint-consistent": "^6.0.0",
     "remark-preset-lint-recommended": "^7.0.0",
+    "sort-package-json": "^2.12.0",
     "stylelint": "^16.11.0",
     "stylelint-config-standard": "^36.0.1",
     "uikit": "3.16.13"
-  }
+  },
+  "engines": {
+    "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
+  },
+  "title": "Tests for programmatically getting and locking screen orientation with JS"
 }

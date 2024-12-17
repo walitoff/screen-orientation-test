@@ -19,3 +19,9 @@ Thumbs.db
 
 node_modules
 /src/public
+
+# Lighthouse reports
+*.report.json
+*.report.html
+desktop.jpg
+mobile.jpg
