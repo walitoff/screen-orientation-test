@@ -26,6 +26,19 @@ export default [
         rules: {},
     },
     {
+        // Settings for configuration files
+        files: [
+            "*.js",
+        ],
+        languageOptions: {
+            ecmaVersion: "latest",
+            sourceType: "module",
+            globals: {
+                ...globals.node,
+            },
+        },
+    },
+    {
         ignores: [
             "src/public/**/*",
         ],

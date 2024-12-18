@@ -1,10 +1,10 @@
 # Workflow for building and deploying a Hugo site to GitHub Pages
-name: Deployment
+name: Deploy
 
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   # eslint-disable-next-line yml/no-empty-mapping-value
@@ -27,16 +27,19 @@ defaults:
   run:
     shell: bash
 
+env:
+  HUGO_VERSION: 0.139.3
+  NODE_VERSION: 23.x
+
 jobs:
   # Build job
   build:
-    runs-on: ubuntu-latest
-    env:
-      HUGO_VERSION: 0.108.0
+    runs-on: ${{ vars.UBUNTU_VERSION }}
+
     steps:
       - name: Install Hugo CLI
         run: |
-          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
+          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${{ env.HUGO_VERSION }}/hugo_extended_${{ env.HUGO_VERSION }}_linux-amd64.deb \
           && sudo dpkg -i ${{ runner.temp }}/hugo.deb
       - name: Install Dart Sass Embedded
         run: sudo snap install dart-sass-embedded
@@ -44,11 +47,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
       - name: Install Node.js dependencies
         run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+      - run: npm run build --if-present
       - name: Build with Hugo
         working-directory: ./src
         env:
@@ -69,7 +78,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.UBUNTU_VERSION }}
     needs: build
     steps:
       - name: Deploy to GitHub Pages
