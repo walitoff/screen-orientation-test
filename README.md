@@ -1,6 +1,14 @@
 # Screen Orientation Test
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5c1b2a41dee048348186f7768e9a265c)](https://app.codacy.com/gh/walitoff/screen-orientation-test/dashboard?utm_source=gh\&utm_medium=referral\&utm_content=\&utm_campaign=Badge_grade)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=bugs)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
 [![Codacy Security Scan](https://github.com/walitoff/screen-orientation-test/actions/workflows/codacy.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/codacy.yml)
 [![Tests](https://github.com/walitoff/screen-orientation-test/actions/workflows/tests.js.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/node.js.yml)
 [![Deploy Hugo site to Pages](https://github.com/walitoff/screen-orientation-test/actions/workflows/hugo.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/hugo.yml)
