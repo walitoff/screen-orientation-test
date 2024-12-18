@@ -23,7 +23,7 @@
     "markdown:fix": "remark . --frail --output",
     "markdownlint": "markdownlint --config .markdownlint.json \"src/**/*.md\" \"*.md\"",
     "package": "npx npm-package-json-lint .",
-    "screenshot": "pageres ./src/public/index.html 320x568 568x320 360x780 780x360 375x812 812x375 390x844 844x390 430x932 932x430 768x1024 1024x768 810x1080 1080x810 834x1112 1112x834 1024x1366 1366x1024 1440x900 2304x1440 1280x800 1366x768 2560x1440 1920x1080 3200x1800 2048x1152 --overwrite --format=jpg --crop --filename=\"<%= size %>\"",
+    "screenshot": "pageres http://127.0.0.1:1313 320x568 568x320 360x780 780x360 375x812 812x375 390x844 844x390 430x932 932x430 768x1024 1024x768 810x1080 1080x810 834x1112 1112x834 1024x1366 1366x1024 1440x900 2304x1440 1280x800 1366x768 2560x1440 1920x1080 3200x1800 2048x1152 --overwrite --format=jpg --crop --filename=\"<%= size %>\"",
     "screenshot:desktop": "pageres ./desktop.report.html 800x1000 --overwrite --format=jpg --crop --filename=\"desktop\"",
     "screenshot:mobile": "pageres ./mobile.report.html 800x1000 --overwrite --format=jpg --crop --filename=\"mobile\"",
     "sort": "sort-package-json ./package.json",
