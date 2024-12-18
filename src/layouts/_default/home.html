@@ -109,7 +109,7 @@
                 <div class="uk-grid-match uk-child-width-1-2 uk-width-xlarge uk-grid-small" uk-grid>
                     {{ range $collection:=(sort .Site.Data.orientations ".weight" "asc") }}
                     {{if . }}
-                    <a onclick="lockOrientation('{{.id}}')" class="uk-link-reset">
+                    <button onclick="lockOrientation('{{.id}}')" class="uk-button uk-button-link">
                         <div id="{{.id}}" class="uk-card uk-card-body uk-card-default">
                             <div>
                                 <img src="{{ "images/phone.jpg" | relURL}}" class="phone"
@@ -123,7 +123,7 @@
                                 {{.title}}
                             </div>
                         </div>
-                    </a>
+                    </button>
                     {{end}}
                     {{end}}
                 </div>
