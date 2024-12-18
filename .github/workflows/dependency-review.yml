@@ -15,7 +15,7 @@ env:
 
 jobs:
   dependency-review:
-    runs-on: ${{ env.UBUNTU_VERSION }}
+    runs-on: "${{ env.UBUNTU_VERSION }}"
     steps:
       - name: 'Checkout Repository'
         uses: actions/checkout@v4

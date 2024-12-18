@@ -35,7 +35,7 @@ env:
 jobs:
   # Build job
   build:
-    runs-on: ${{ env.UBUNTU_VERSION }}
+    runs-on: "${{ env.UBUNTU_VERSION }}"
 
     steps:
       - name: Install Hugo CLI
@@ -79,7 +79,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ${{ env.UBUNTU_VERSION }}
+    runs-on: "${{ env.UBUNTU_VERSION }}"
     needs: build
     steps:
       - name: Deploy to GitHub Pages
