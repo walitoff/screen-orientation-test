@@ -4,6 +4,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=bugs)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
@@ -12,6 +13,7 @@
 [![Codacy Security Scan](https://github.com/walitoff/screen-orientation-test/actions/workflows/codacy.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/codacy.yml)
 [![Tests](https://github.com/walitoff/screen-orientation-test/actions/workflows/tests.js.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/node.js.yml)
 [![Deploy Hugo site to Pages](https://github.com/walitoff/screen-orientation-test/actions/workflows/hugo.yml/badge.svg)](https://github.com/walitoff/screen-orientation-test/actions/workflows/hugo.yml)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=walitoff_screen-orientation-test&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=walitoff_screen-orientation-test)
 ![GitHub](https://img.shields.io/github/license/walitoff/screen-orientation-test?color=blue)
 
 This project builds a web page for testing user's browser if it can report active device screen orientation, and
