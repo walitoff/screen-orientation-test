@@ -30,11 +30,12 @@ defaults:
 env:
   HUGO_VERSION: 0.139.3
   NODE_VERSION: 23.x
+  UBUNTU_VERSION: ubuntu-22.04
 
 jobs:
   # Build job
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ env.UBUNTU_VERSION }}
 
     steps:
       - name: Install Hugo CLI
@@ -78,7 +79,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ env.UBUNTU_VERSION }}
     needs: build
     steps:
       - name: Deploy to GitHub Pages

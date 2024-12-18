@@ -9,10 +9,11 @@ on:
 env:
   HUGO_VERSION: 0.139.3
   NODE_VERSION: 23.x
+  UBUNTU_VERSION: ubuntu-22.04
 
 jobs:
   Build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ env.UBUNTU_VERSION }}
 
     strategy:
       fail-fast: false
@@ -44,7 +45,7 @@ jobs:
   Lighthouse:
     needs: Build
     if: ${{ github.actor != 'dependabot[bot]' }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ env.UBUNTU_VERSION }}
 
     permissions:
       # Required to upload/save artifact, otherwise you'll get
@@ -137,7 +138,7 @@ jobs:
   Screenshots:
     needs: Build
     if: ${{ github.actor != 'dependabot[bot]' }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ env.UBUNTU_VERSION }}
 
     permissions:
       # Required to upload/save artifact, otherwise you'll get
