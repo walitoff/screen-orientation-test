@@ -56,25 +56,25 @@ function toggleFullscreenMode() {
     UIkit.notification.closeAll();
     if (!document.fullscreenElement) {
         console.log("Entering fullscreen mode");
-        try {
+        if (document.documentElement.requestFullscreen && typeof document.documentElement.requestFullscreen === "function") {
             document.documentElement.requestFullscreen({navigationUI: "hide"}).then(() => {
                 UIkit.notification("Entered fullscreen mode", {status: "success"});
             }).catch((error) => {
                 UIkit.notification(`Failed to enter fullscreen mode. ${error}`, {status: 'danger'});
             });
-        } catch (error) {
-            UIkit.notification(`Fullscreen mode not supported. ${error}`, {status: 'danger'});
+        } else {
+            UIkit.notification("Fullscreen mode not supported", {status: 'danger'});
         }
     } else {
         console.log("Exiting fullscreen mode");
-        try {
+        if (document.exitFullscreen && typeof document.exitFullscreen === "function") {
             document.exitFullscreen().then(() => {
                 UIkit.notification("Exited fullscreen mode", {status: "success"});
             }).catch((error) => {
                 UIkit.notification(`Failed to exit fullscreen mode. ${error}`, {status: 'danger'});
             });
-        } catch (error) {
-            UIkit.notification(`Fullscreen mode not supported. ${error}`, {status: 'danger'});
+        } else {
+            UIkit.notification("Fullscreen mode not supported", {status: 'danger'});
         }
     }
 }
