@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
-    "@eslint/js": "^9.15.0",
+    "@eslint/js": "^9.17.0",
     "@prantlf/jsonlint": "^16.0.0",
     "@types/uikit": "^3.14.0",
     "eslint": "^9.16.0",
