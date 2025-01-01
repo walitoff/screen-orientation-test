@@ -111,7 +111,7 @@ jobs:
             mobile.report.json
       - name: Upload files to Imgbb
         id: upload-files-imgbb
-        uses: McCzarny/upload-image@v1.3.0
+        uses: McCzarny/upload-image@v1.4.0
         with:
           path: |
             mobile.jpg
@@ -196,7 +196,7 @@ jobs:
             ./*.jpg
       - name: Upload files to Imgbb
         id: upload-files-imgbb
-        uses: McCzarny/upload-image@v1.3.0
+        uses: McCzarny/upload-image@v1.4.0
         with:
           # Device viewport sizes https://blisk.io/devices
           path: |
