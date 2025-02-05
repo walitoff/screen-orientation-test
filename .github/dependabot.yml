@@ -5,23 +5,36 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
-      interval: "monthly"
-    ignore:
-      # No need to update the UIKit, I guess
-      - dependency-name: "uikit"
+      interval: "weekly"
+      day: "sunday"
+      time: "17:00"
+      timezone: "Europe/Paris"
     groups:
+      prod-dependencies:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "*"
       dev-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
         patterns:
           - "*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      # Check for updates to GitHub Actions
-      interval: "monthly"
+      interval: "weekly"
+      day: "sunday"
+      time: "17:00"
+      timezone: "Europe/Paris"
     groups:
       actions-deps:
         patterns:

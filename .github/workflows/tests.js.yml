@@ -4,7 +4,7 @@ name: Tests
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master", "main" ]
 
 env:
   HUGO_VERSION: 0.139.3
@@ -32,7 +32,7 @@ jobs:
         with:
           submodules: recursive
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
@@ -101,7 +101,7 @@ jobs:
         run: npm run screenshot:desktop
       - name: Upload Lighthouse Report
         id: lighthouseUploadReport
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v4
         with:
           name: Lighthouse-report
           path: |
@@ -188,7 +188,7 @@ jobs:
         run: npm run screenshot
       - name: Upload files as artifacts
         id: upload-files-artifacts
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v4
         with:
           name: Screenshots
           path: |
@@ -200,32 +200,12 @@ jobs:
         with:
           # Device viewport sizes https://blisk.io/devices
           path: |
-            320x568.jpg
-            568x320.jpg
             360x780.jpg
             780x360.jpg
-            375x812.jpg
-            812x375.jpg
-            390x844.jpg
-            844x390.jpg
-            430x932.jpg
-            932x430.jpg
             768x1024.jpg
             1024x768.jpg
-            810x1080.jpg
-            1080x810.jpg
-            834x1112.jpg
-            1112x834.jpg
-            1024x1366.jpg
-            1366x1024.jpg
-            1440x900.jpg
-            2304x1440.jpg
             1280x800.jpg
-            1366x768.jpg
-            2560x1440.jpg
             1920x1080.jpg
-            3200x1800.jpg
-            2048x1152.jpg
           uploadMethod: imgbb
           apiKey: '${{ secrets.IMGBB_API_KEY }}'
           # Images will be automatically deleted after 30 days
@@ -235,96 +215,18 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            #### Screenshots
+            #### Screenshots 
             
-            <details>
-            <summary>Smartphones</summary>
-            
-            #### iPhone 5 (320x568)
-            
-            |  Portrait Mode  |  Landscape Mode |
+            |  Phone Portrait Mode (360x780)  |  Phone Landscape Mode (780x360) |
             |----|----|
-            | ![iPhone 5 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[0]}}) | ![iPhone 5 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[1]}}) |
-
-            #### Honor 20 Pro (360x780)
+            | ![Phone Portrait Mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[0]}}) | ![Phone Landscape Mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[1]}}) |
             
-            |  Portrait Mode  |  Landscape Mode |
+            |  iPad Portrait Mode (768x1024) |  iPad Landscape Mode (1024x768) |
             |----|----|
-            | ![Honor 20 Pro portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[2]}}) | ![Honor 20 Pro portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[3]}}) |
-
-            #### iPhone X (375x812)
+            | ![iPad Portrait Mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[2]}}) | ![iPad Landscape Mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[3]}}) |
             
-            |  Portrait Mode  |  Landscape Mode |
+            |  Laptop-S 1280x800 |  Desktop 1920x1080 |
             |----|----|
-            | ![iPhone X portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[4]}}) | ![iPhone X portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[5]}}) |
-
-            #### iPhone 12/13 Pro (390x844)
+            | ![Laptop-S 1280x800 screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[4]}}) |  ![Desktop 1920x1080 screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[5]}}) |
             
-            |  Portrait Mode  |  Landscape Mode |
-            |----|----|
-            | ![iPhone 12 Pro portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[6]}}) | ![iPhone 12 Pro portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[7]}}) |
-
-            #### iPhone 14/15 Pro Max (430x932)
-            
-            |  Portrait Mode  |  Landscape Mode |
-            |----|----|
-            | ![iPhone 14 Pro Max portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[8]}}) | ![iPhone 14 Pro Max portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[9]}}) |
-            
-            </details>
-
-            <details>
-            <summary>Tablets</summary>
-            
-            #### iPad Mini 4 / Pro 9 (768x1024)
-            
-            |  Portrait Mode  |  Landscape Mode |
-            |----|----|
-            | ![iPad Mini portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[10]}}) | ![iPad Mini portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[11]}}) |
-
-            #### iPad 10 (810x1080)
-            
-            |  Portrait Mode  |  Landscape Mode |
-            |----|----|
-            | ![iPad 10 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[12]}}) | ![iPad 10 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[13]}}) |
-
-            #### iPad Pro 10 (834x1112)
-            
-            |  Portrait Mode  |  Landscape Mode |
-            |----|----|
-            | ![iPad Pro 10 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[14]}}) | ![iPad Pro 10 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[15]}}) |
-
-            #### iPad Pro 12 (1024x1366)
-            
-            |  Portrait Mode  |  Landscape Mode |
-            |----|----|
-            | ![iPad Pro 12 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[16]}}) | ![iPad Pro 12 portrait mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[17]}}) |
-            
-            </details>
-
-            <details>
-            <summary>Notebooks</summary>
-            
-            |  MacBook Air 13.3"/15.4" (1440x900) |  MacBook 12" (2304x1440) |
-            |----|----|
-            | ![MacBook Air 13.3" screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[18]}}) | ![MacBook 12" screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[19]}}) |
-
-            |  Laptop-S 1280x800 |  Laptop-M 1366x768 |
-            |----|----|
-            | ![Laptop-S 1280x800 screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[20]}}) | ![Laptop-M 1366x768 screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[21]}}) |
-            
-            </details>
-
-            <details>
-            <summary>Desktop</summary>
-
-            |  2560x1440 |  1920x1080 |
-            |----|----|
-            | ![2560x1440 screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[22]}}) | ![1920x1080 screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[23]}}) |
-
-            |  iMac Pro Retina 5K 27" (3200x1800) |  iMac Retina 4K 21.5" (2048x1152) |
-            |----|----|
-            | ![iMac Pro Retina 5K 27" screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[24]}}) | ![iMac Retina 4K 21.5" screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[25]}}) |
-            
-            </details>
-
             [Full ZIP](${{ steps.upload-files-artifacts.outputs.artifact-url }})
