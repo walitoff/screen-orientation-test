@@ -4,7 +4,7 @@ name: Tests
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master", "main" ]
 
 env:
   HUGO_VERSION: 0.139.3
@@ -32,7 +32,7 @@ jobs:
         with:
           submodules: recursive
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
@@ -101,7 +101,7 @@ jobs:
         run: npm run screenshot:desktop
       - name: Upload Lighthouse Report
         id: lighthouseUploadReport
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v4
         with:
           name: Lighthouse-report
           path: |
@@ -188,7 +188,7 @@ jobs:
         run: npm run screenshot
       - name: Upload files as artifacts
         id: upload-files-artifacts
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v4
         with:
           name: Screenshots
           path: |
