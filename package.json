@@ -39,11 +39,11 @@
     ]
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.0",
-    "@eslint/js": "^9.22.0",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.23.0",
     "@prantlf/jsonlint": "^16.0.0",
     "@types/uikit": "^3.14.0",
-    "eslint": "^9.22.0",
+    "eslint": "^9.23.0",
     "eslint-plugin-yml": "^1.17.0",
     "globals": "^16.0.0",
     "lighthouse": "^12.4.0",
@@ -60,7 +60,7 @@
     "sort-package-json": "^3.0.0",
     "stylelint": "^16.16.0",
     "stylelint-config-standard": "^37.0.0",
-    "uikit": "3.23.2"
+    "uikit": "3.23.3"
   },
   "engines": {
     "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
