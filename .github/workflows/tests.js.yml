@@ -101,7 +101,7 @@ jobs:
         run: npm run screenshot:desktop
       - name: Upload Lighthouse Report
         id: lighthouseUploadReport
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: Lighthouse-report
           path: |
@@ -188,7 +188,7 @@ jobs:
         run: npm run screenshot
       - name: Upload files as artifacts
         id: upload-files-artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: Screenshots
           path: |
