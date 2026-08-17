@@ -39,8 +39,22 @@ export default [
         },
     },
     {
+        // Unit tests run in Node with jsdom; allow Node globals and modern syntax.
+        files: [
+            "test/**/*.js",
+        ],
+        languageOptions: {
+            ecmaVersion: "latest",
+            sourceType: "module",
+            globals: {
+                ...globals.node,
+            },
+        },
+    },
+    {
         ignores: [
             "src/public/**/*",
+            "visual-output/**/*",
         ],
     },
     ...eslintPluginYml.configs['flat/recommended']

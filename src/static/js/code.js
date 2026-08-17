@@ -105,26 +105,28 @@ function toggleFullscreenMode() {
     }
 }
 
+/**
+ * Gets current screen orientation
+ * @returns {OrientationType|null}
+ */
+function getScreenOrientation() {
+    "use strict";
+
+    try {
+        if (screen.orientation.type) {
+            return screen.orientation.type;
+        }
+    } catch (e) {
+        console.debug("Orientation API not supported", e.message);
+    }
+    return null;
+}
+
 function start() {
     "use strict";
 
     console.log("Started");
     const orientationElement = document.getElementById("activeOrientation");
-
-    /**
-     * Gets current screen orientation
-     * @returns {OrientationType|null}
-     */
-    function getScreenOrientation() {
-        try {
-            if (screen.orientation.type) {
-                return screen.orientation.type;
-            }
-        } catch (e) {
-            console.debug("Orientation API not supported", e.message);
-        }
-        return null;
-    }
 
     /**
      * Updates orientation type on screen
@@ -171,3 +173,9 @@ function start() {
 }());
 
 /*exported toggleFullscreenMode, lockOrientation */
+
+// Export for unit tests (Node/CommonJS). In the browser `module` is undefined,
+// so this block is a no-op and has no effect on the shipped page.
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = {notify, lockOrientation, toggleFullscreenMode, getScreenOrientation, start};
+}
