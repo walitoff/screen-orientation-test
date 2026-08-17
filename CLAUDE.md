@@ -53,8 +53,9 @@ One-time CI configuration (repository variables, secrets, Visual-job permissions
   add the `update-visual-baselines` label to the PR; CI regenerates and commits them. The `Visual` CI
   job pushes the three images per viewport to the `ci-artifacts` orphan branch (shared with the
   Lighthouse job via `scripts/publish-images.sh`) and posts them inline in a PR comment. No
-  third-party image host is used; a cleanup workflow removes a PR's images when it closes. Fork PRs
-  skip this job (read-only token); a maintainer can run it on demand by commenting `/visual`.
+  third-party image host is used; a daily cleanup workflow prunes a PR's images 30 days after it
+  closes. Fork PRs skip this job (read-only token); a maintainer can run it on demand by
+  commenting `/visual`.
 
 ## Architecture
 

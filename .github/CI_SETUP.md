@@ -78,14 +78,19 @@ the previous third-party image host.
   affecting the site or its history.
 - Pushing uses `VISUAL_TOKEN` when set, otherwise `GITHUB_TOKEN`. The account-level
   **Read and write permissions** setting above must be enabled either way.
-- When a PR is closed, the [`Cleanup PR artifacts`](./workflows/cleanup-artifacts.yml)
-  workflow removes that PR's `pr-<n>/` directories from the branch automatically.
+- The [`Cleanup PR artifacts`](./workflows/cleanup-artifacts.yml) workflow runs daily
+  and removes a PR's `pr-<n>/` directories only after the PR has been **closed for at
+  least 30 days**. Open PRs are always kept, and recently merged (including
+  auto-merged) PRs stay visible during the grace period so their results can still be
+  reviewed. Adjust the window with the `retention_days` input when running the
+  workflow manually, or by editing its default. Because it is schedule-driven, a
+  missed run simply prunes on the next day.
 
 ### Fork pull requests
 
 The Visual and Lighthouse jobs push images and comment on the PR, which requires a
 write-scoped token. Pull requests from forks only receive a read-only token, so both
-jobs (and the cleanup job) are skipped for fork PRs via a
+jobs are skipped for fork PRs via a
 `github.event.pull_request.head.repo.fork == false` guard. The `Build` and `HTML`
 jobs still run on fork PRs. For fork PRs, a maintainer can render the visuals
 on demand with the `/visual` command below.
