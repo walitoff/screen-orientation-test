@@ -65,8 +65,9 @@ jobs:
         run: npm run test:html
 
   # Visual regression: expected / actual / heatmap per viewport, posted to the PR.
+  # Skipped for fork PRs, whose read-only token can't push images or comment.
   Visual:
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    if: ${{ github.actor != 'dependabot[bot]' && github.event.pull_request.head.repo.fork == false }}
     runs-on: ${{ vars.UBUNTU_VERSION }}
     permissions:
       contents: write        # push artifacts branch + commit refreshed baselines
@@ -156,9 +157,10 @@ jobs:
           exit 1
 
   # Make a Lighthouse Report
+  # Skipped for fork PRs, whose read-only token can't push images or comment.
   Lighthouse:
     needs: Build
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    if: ${{ github.actor != 'dependabot[bot]' && github.event.pull_request.head.repo.fork == false }}
     runs-on: ${{ vars.UBUNTU_VERSION }}
 
     permissions:
@@ -238,96 +240,3 @@ jobs:
         # Runs last so the report artifact and PR comment are always published first;
         # this step fails the job if any category score is below its configured minimum.
         run: npm run lighthouse:check
-
-
-  # Make screenshots of the resulting page
-  Screenshots:
-    needs: Build
-    if: ${{ github.actor != 'dependabot[bot]' }}
-    runs-on: ${{ vars.UBUNTU_VERSION }}
-
-    permissions:
-      # Required to upload/save artifact, otherwise you'll get
-      # "Error: Resource not accessible by integration"
-      contents: write
-      # Required to post comment, otherwise you'll get
-      # "Error: Resource not accessible by integration"
-      pull-requests: write
-    steps:
-      - name: Install Hugo CLI
-        run: |
-          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${{ env.HUGO_VERSION }}/hugo_extended_${{ env.HUGO_VERSION }}_linux-amd64.deb \
-          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
-      - name: Checkout
-        uses: actions/checkout@v7
-      - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v7
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - name: Install Node.js dependencies
-        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
-      - name: Build with Hugo
-        # Produces ./src/public, which is uploaded as an artifact below.
-        working-directory: ./src
-        env:
-          # For maximum backward compatibility with Hugo modules
-          HUGO_ENVIRONMENT: production
-          HUGO_ENV: production
-        run: |
-          hugo \
-            --minify
-      - name: Run Hugo Server
-        working-directory: ./src
-        env:
-          # For maximum backward compatibility with Hugo modules
-          HUGO_ENVIRONMENT: production
-          HUGO_ENV: production
-        # Run server in background
-        run: hugo server &
-      - name: Wait for Hugo server
-        # Poll until the server responds instead of a fixed sleep.
-        run: npx --yes wait-on http://localhost:1313/ --timeout 60000
-      - name: Make screenshots
-        run: npm run screenshot
-      - name: Upload files as artifacts
-        id: upload-files-artifacts
-        uses: actions/upload-artifact@v7
-        with:
-          name: Screenshots
-          path: |
-            src/public/index.html
-            ./*.jpg
-      - name: Collect screenshot images
-        # Device viewport sizes https://blisk.io/devices
-        run: |
-          mkdir -p screenshot-images
-          cp 360x780.jpg 780x360.jpg 768x1024.jpg 1024x768.jpg 1280x800.jpg 1920x1080.jpg screenshot-images/
-      - name: Publish the images
-        id: publish
-        env:
-          ARTIFACTS_BRANCH: ci-artifacts
-          DEST_DIR: screenshots/pr-${{ github.event.pull_request.number }}/${{ github.run_id }}
-          SRC_DIR: screenshot-images
-          GH_TOKEN: ${{ secrets.VISUAL_TOKEN || secrets.GITHUB_TOKEN }}
-        run: bash scripts/publish-images.sh >> "$GITHUB_OUTPUT"
-      - name: Comment with the images
-        uses: peter-evans/create-or-update-comment@v5
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            #### Screenshots
-
-            |  Phone Portrait Mode (360x780)  |  Phone Landscape Mode (780x360) |
-            |----|----|
-            | ![Phone Portrait Mode screenshot](${{ steps.publish.outputs.RAW_BASE }}/360x780.jpg) | ![Phone Landscape Mode screenshot](${{ steps.publish.outputs.RAW_BASE }}/780x360.jpg) |
-
-            |  iPad Portrait Mode (768x1024) |  iPad Landscape Mode (1024x768) |
-            |----|----|
-            | ![iPad Portrait Mode screenshot](${{ steps.publish.outputs.RAW_BASE }}/768x1024.jpg) | ![iPad Landscape Mode screenshot](${{ steps.publish.outputs.RAW_BASE }}/1024x768.jpg) |
-
-            |  Laptop-S 1280x800 |  Desktop 1920x1080 |
-            |----|----|
-            | ![Laptop-S 1280x800 screenshot](${{ steps.publish.outputs.RAW_BASE }}/1280x800.jpg) |  ![Desktop 1920x1080 screenshot](${{ steps.publish.outputs.RAW_BASE }}/1920x1080.jpg) |
-
-            [Full ZIP](${{ steps.upload-files-artifacts.outputs.artifact-url }})

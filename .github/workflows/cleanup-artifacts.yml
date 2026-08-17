@@ -1,0 +1,24 @@
+# Removes a PR's images from the ci-artifacts branch once the PR is closed.
+name: Cleanup PR artifacts
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    # Fork PRs never published images (their jobs are skipped), so skip cleanup too.
+    if: ${{ github.event.pull_request.head.repo.fork == false }}
+    runs-on: ${{ vars.UBUNTU_VERSION }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Remove PR images from ci-artifacts
+        env:
+          ARTIFACTS_BRANCH: ci-artifacts
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GH_TOKEN: ${{ secrets.VISUAL_TOKEN || secrets.GITHUB_TOKEN }}
+        run: bash scripts/cleanup-images.sh

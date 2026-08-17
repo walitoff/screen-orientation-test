@@ -51,9 +51,9 @@ One-time CI configuration (repository variables, secrets, Visual-job permissions
   the diff ratio exceeds `MAX_DIFF_PIXEL_RATIO` (default 1%). **Baselines are generated in CI** (Linux
   font rendering) — don't commit locally generated ones. To refresh after an intentional UI change,
   add the `update-visual-baselines` label to the PR; CI regenerates and commits them. The `Visual` CI
-  job pushes the three images per viewport to the `ci-artifacts` orphan branch (shared by the
-  Lighthouse and Screenshots jobs via `scripts/publish-images.sh`) and posts them inline in a PR
-  comment. No third-party image host is used.
+  job pushes the three images per viewport to the `ci-artifacts` orphan branch (shared with the
+  Lighthouse job via `scripts/publish-images.sh`) and posts them inline in a PR comment. No
+  third-party image host is used; a cleanup workflow removes a PR's images when it closes.
 
 ## Architecture
 
@@ -85,5 +85,6 @@ The entire application is three hand-written files under `src/`, assembled by Hu
 - `src/**/*.js` is linted as browser **ES2015 script** (not modules), with `UIkit` as a read-only global.
   Root-level `*.js` config files are treated as modern Node ES modules. Keep client code within these limits.
 - Deployment (`.github/workflows/hugo.yml`) triggers on push to `main`; PR checks
-  (`.github/workflows/tests.js.yml`) run the lint suite across multiple Node versions plus Lighthouse and
-  screenshot jobs. Hugo and Node versions are pinned in the workflow env.
+  (`.github/workflows/tests.js.yml`) run the lint suite across multiple Node versions plus HTML
+  validation, visual regression, and Lighthouse jobs. Hugo and Node versions are pinned in the
+  workflow env. See [`.github/CI_SETUP.md`](.github/CI_SETUP.md) for required repo configuration.
