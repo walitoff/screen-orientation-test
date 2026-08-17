@@ -26,6 +26,22 @@ No third-party image host is used. The Lighthouse and Visual jobs publish their
 PR-comment images to an orphan branch in this same repository (see
 [Image hosting](#image-hosting)), so there is no `IMGBB_API_KEY` or similar to set.
 
+## Auto-merging Dependabot PRs
+
+[`dependabot-auto-merge.yml`](./workflows/dependabot-auto-merge.yml) auto-merges
+Dependabot PRs for **minor and patch** updates (majors are left for human review,
+gated via `dependabot/fetch-metadata`). For it to be safe it depends on two
+repository settings that must be configured by an admin:
+
+- **Enable auto-merge** under **Settings → General → Pull Requests → "Allow auto-merge"**.
+  Without this, `gh pr merge --auto` fails outright.
+- **Branch protection** on the `main`/`master` branch must *require* the `Build` and
+  `HTML` status checks (from `tests.js.yml`). These are the jobs that run on
+  Dependabot PRs (`Visual` and `Lighthouse` are skipped for dependabot). Requiring
+  them is what makes `gh pr merge --auto` actually wait for the test suite to pass —
+  without required checks, an auto-merge-enabled PR merges as soon as it is
+  conflict-free, regardless of test results.
+
 ## Visual regression job
 
 The `Visual` job in [`tests.js.yml`](./workflows/tests.js.yml) renders the page in

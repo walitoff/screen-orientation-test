@@ -91,7 +91,7 @@ jobs:
         run: node scripts/visual-comment.mjs
       - name: Find existing visual comment
         id: find-comment
-        uses: peter-evans/find-comment@v3
+        uses: peter-evans/find-comment@v4
         with:
           issue-number: ${{ github.event.issue.number }}
           comment-author: 'github-actions[bot]'

@@ -36,8 +36,9 @@ running server and are wired into CI (not in `npm test`):
 
 Building requires the Hugo **extended** binary installed separately (it is not an npm dependency).
 
-One-time CI configuration (repository variables, secrets, Visual-job permissions, and the
-`update-visual-baselines` label) is documented in [`.github/CI_SETUP.md`](.github/CI_SETUP.md).
+One-time CI configuration (repository variables, secrets, Visual-job permissions, the
+`update-visual-baselines` label, and the branch-protection/auto-merge requirements for
+Dependabot auto-merge) is documented in [`.github/CI_SETUP.md`](.github/CI_SETUP.md).
 
 ### Testing architecture
 

@@ -15,9 +15,17 @@ jobs:
     runs-on: ${{ vars.UBUNTU_VERSION }}
     if: github.actor == 'dependabot[bot]' # Only trigger for Dependabot PRs
     steps:
-      - name: Auto-merge Dependabot PRs
+      - name: Read Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v3
+        with:
+          # Use the workflow token; no PAT required to read the PR's update type.
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Auto-merge minor and patch Dependabot PRs
+        # Major bumps (breaking changes) are left for human review.
+        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-minor' || steps.metadata.outputs.update-type == 'version-update:semver-patch' }}
         run: |
-          gh pr comment "$PR_URL" --body "Auto-merging this Dependabot PR."
+          gh pr comment "$PR_URL" --body "Auto-merging this Dependabot PR (minor or patch update)."
           gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
