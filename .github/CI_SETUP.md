@@ -87,9 +87,31 @@ The Visual and Lighthouse jobs push images and comment on the PR, which requires
 write-scoped token. Pull requests from forks only receive a read-only token, so both
 jobs (and the cleanup job) are skipped for fork PRs via a
 `github.event.pull_request.head.repo.fork == false` guard. The `Build` and `HTML`
-jobs still run on fork PRs. To enable the image-publishing jobs for trusted forks,
-you would need a workflow that runs in the base-repo context (e.g. `pull_request_target`),
-which is intentionally not used here to avoid exposing write tokens to fork code.
+jobs still run on fork PRs. For fork PRs, a maintainer can render the visuals
+on demand with the `/visual` command below.
+
+### `/visual` command (on-demand visual regression)
+
+Because the automatic Visual job is skipped on fork PRs, a maintainer can trigger
+it manually by commenting `/visual` on the pull request. This is handled by
+[`visual-command.yml`](./workflows/visual-command.yml).
+
+- It runs on `issue_comment`, which executes in the **base repository** context and
+  therefore has a write-scoped token — this is what lets it publish images and
+  comment on a fork PR.
+- The `authorize` job gates the run: it only proceeds when the comment starts with
+  `/visual`, is on a pull request, and the **commenter has `write`, `maintain`, or
+  `admin`** permission. Comments from anyone else are ignored. On success it adds an
+  "eyes" reaction to the comment so the maintainer knows the run started.
+- The `visual` job checks out the PR head via `refs/pull/<n>/head` (works for forks),
+  runs `npm run visual`, publishes to `ci-artifacts` under `visual/pr-<n>/<run_id>/`,
+  and posts/updates the same comparison comment as the automatic job.
+
+> Security note: this renders the fork's `src/` at that commit with a write token in
+> scope. For this static Hugo site the risk is low (no build-time script execution
+> beyond Hugo), but only trigger `/visual` after reviewing the PR's changes. The
+> command deliberately checks commenter permission rather than running automatically,
+> and it does not use `pull_request_target`.
 
 ## Local development
 
