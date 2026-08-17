@@ -18,10 +18,13 @@ Set under **Settings → Secrets and variables → Actions → Secrets**.
 
 | Secret | Used by | Required | Purpose |
 |----|----|----|----|
-| `IMGBB_API_KEY` | Lighthouse, Screenshots | Yes for those jobs | Uploads report/screenshot images to imgbb for the PR comment. |
 | `SONAR_TOKEN` | SonarCloud | Yes for that job | Authenticates the SonarCloud scan. |
 | `CODACY_PROJECT_TOKEN` | Codacy | Optional | Codacy project token; the scan runs with defaults if omitted. |
-| `VISUAL_TOKEN` | Visual | Optional (recommended) | PAT so auto-committed baselines re-trigger checks. See below. |
+| `VISUAL_TOKEN` | Visual, Lighthouse, Screenshots | Optional (recommended) | PAT for pushing images and baselines. See below. |
+
+No third-party image host is used. The Lighthouse, Screenshots, and Visual jobs all
+publish their PR-comment images to an orphan branch in this same repository (see
+[Image hosting](#image-hosting)), so there is no `IMGBB_API_KEY` or similar to set.
 
 ## Visual regression job
 
@@ -59,12 +62,22 @@ baseline commit. Provide a fine-grained PAT as `VISUAL_TOKEN` (scopes: `contents
 `pull-requests:write`) to avoid this; the checkout step uses it when present and
 falls back to `GITHUB_TOKEN` otherwise.
 
-### Artifacts branch
+## Image hosting
 
-Comparison images are pushed to an orphan branch named
-`visual-regression-artifacts` under `pr-<number>/<run_id>/`. The branch is created
-automatically on first use. It only stores images referenced by PR comments and can
-be pruned or deleted at any time without affecting the site or its history.
+All PR-comment images (Lighthouse score cards, page screenshots, and the visual
+regression expected/actual/heatmap set) are pushed to a single orphan branch named
+`ci-artifacts` by [`scripts/publish-images.sh`](../scripts/publish-images.sh), then
+referenced by their `raw.githubusercontent.com` URLs in the comment. This replaces
+the previous third-party image host.
+
+- Each job writes to a distinct path so parallel jobs don't collide:
+  `visual/pr-<n>/<run_id>/`, `lighthouse/pr-<n>/<run_id>/`,
+  `screenshots/pr-<n>/<run_id>/`. The script also retries on push races.
+- The branch is created automatically on first use. It only stores images
+  referenced by PR comments and can be pruned or deleted at any time without
+  affecting the site or its history.
+- Pushing uses `VISUAL_TOKEN` when set, otherwise `GITHUB_TOKEN`. The account-level
+  **Read and write permissions** setting above must be enabled either way.
 
 ## Local development
 

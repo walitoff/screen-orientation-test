@@ -125,9 +125,11 @@ jobs:
       - name: Publish comparison images
         id: publish
         env:
-          ARTIFACTS_BRANCH: visual-regression-artifacts
-          DEST_DIR: pr-${{ github.event.pull_request.number }}/${{ github.run_id }}
-        run: bash scripts/visual-publish.sh >> "$GITHUB_OUTPUT"
+          ARTIFACTS_BRANCH: ci-artifacts
+          DEST_DIR: visual/pr-${{ github.event.pull_request.number }}/${{ github.run_id }}
+          SRC_DIR: visual-output
+          GH_TOKEN: ${{ secrets.VISUAL_TOKEN || secrets.GITHUB_TOKEN }}
+        run: bash scripts/publish-images.sh >> "$GITHUB_OUTPUT"
       - name: Build PR comment
         env:
           RAW_BASE: ${{ steps.publish.outputs.RAW_BASE }}
@@ -209,17 +211,18 @@ jobs:
             desktop.report.json
             mobile.report.html
             mobile.report.json
-      - name: Upload files to Imgbb
-        id: upload-files-imgbb
-        uses: McCzarny/upload-image@v2.0.5
-        with:
-          path: |
-            mobile.jpg
-            desktop.jpg
-          uploadMethod: imgbb
-          apiKey: '${{ secrets.IMGBB_API_KEY }}'
-          # Images will be automatically deleted after 30 days
-          expiration: 86400
+      - name: Collect report images
+        run: |
+          mkdir -p lighthouse-images
+          cp mobile.jpg desktop.jpg lighthouse-images/
+      - name: Publish report images
+        id: publish
+        env:
+          ARTIFACTS_BRANCH: ci-artifacts
+          DEST_DIR: lighthouse/pr-${{ github.event.pull_request.number }}/${{ github.run_id }}
+          SRC_DIR: lighthouse-images
+          GH_TOKEN: ${{ secrets.VISUAL_TOKEN || secrets.GITHUB_TOKEN }}
+        run: bash scripts/publish-images.sh >> "$GITHUB_OUTPUT"
       - name: Publish info
         uses: peter-evans/create-or-update-comment@v5
         with:
@@ -228,7 +231,7 @@ jobs:
             ### Lighthouse Report
             |  Mobile  |  Desktop |
             |----|----|
-            | ![Lighthouse Mobile Report Score](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[0]}}) | ![Lighthouse Desktop Report Score](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[1]}}) |
+            | ![Lighthouse Mobile Report Score](${{ steps.publish.outputs.RAW_BASE }}/mobile.jpg) | ![Lighthouse Desktop Report Score](${{ steps.publish.outputs.RAW_BASE }}/desktop.jpg) |
 
             [Download report ZIP](${{ steps.lighthouseUploadReport.outputs.artifact-url }})
       - name: Check Lighthouse thresholds
@@ -295,39 +298,36 @@ jobs:
           path: |
             src/public/index.html
             ./*.jpg
-      - name: Upload files to Imgbb
-        id: upload-files-imgbb
-        uses: McCzarny/upload-image@v2.0.5
-        with:
-          # Device viewport sizes https://blisk.io/devices
-          path: |
-            360x780.jpg
-            780x360.jpg
-            768x1024.jpg
-            1024x768.jpg
-            1280x800.jpg
-            1920x1080.jpg
-          uploadMethod: imgbb
-          apiKey: '${{ secrets.IMGBB_API_KEY }}'
-          # Images will be automatically deleted after 30 days
-          expiration: 86400
+      - name: Collect screenshot images
+        # Device viewport sizes https://blisk.io/devices
+        run: |
+          mkdir -p screenshot-images
+          cp 360x780.jpg 780x360.jpg 768x1024.jpg 1024x768.jpg 1280x800.jpg 1920x1080.jpg screenshot-images/
       - name: Publish the images
+        id: publish
+        env:
+          ARTIFACTS_BRANCH: ci-artifacts
+          DEST_DIR: screenshots/pr-${{ github.event.pull_request.number }}/${{ github.run_id }}
+          SRC_DIR: screenshot-images
+          GH_TOKEN: ${{ secrets.VISUAL_TOKEN || secrets.GITHUB_TOKEN }}
+        run: bash scripts/publish-images.sh >> "$GITHUB_OUTPUT"
+      - name: Comment with the images
         uses: peter-evans/create-or-update-comment@v5
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            #### Screenshots 
-            
+            #### Screenshots
+
             |  Phone Portrait Mode (360x780)  |  Phone Landscape Mode (780x360) |
             |----|----|
-            | ![Phone Portrait Mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[0]}}) | ![Phone Landscape Mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[1]}}) |
-            
+            | ![Phone Portrait Mode screenshot](${{ steps.publish.outputs.RAW_BASE }}/360x780.jpg) | ![Phone Landscape Mode screenshot](${{ steps.publish.outputs.RAW_BASE }}/780x360.jpg) |
+
             |  iPad Portrait Mode (768x1024) |  iPad Landscape Mode (1024x768) |
             |----|----|
-            | ![iPad Portrait Mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[2]}}) | ![iPad Landscape Mode screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[3]}}) |
-            
+            | ![iPad Portrait Mode screenshot](${{ steps.publish.outputs.RAW_BASE }}/768x1024.jpg) | ![iPad Landscape Mode screenshot](${{ steps.publish.outputs.RAW_BASE }}/1024x768.jpg) |
+
             |  Laptop-S 1280x800 |  Desktop 1920x1080 |
             |----|----|
-            | ![Laptop-S 1280x800 screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[4]}}) |  ![Desktop 1920x1080 screenshot](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[5]}}) |
-            
+            | ![Laptop-S 1280x800 screenshot](${{ steps.publish.outputs.RAW_BASE }}/1280x800.jpg) |  ![Desktop 1920x1080 screenshot](${{ steps.publish.outputs.RAW_BASE }}/1920x1080.jpg) |
+
             [Full ZIP](${{ steps.upload-files-artifacts.outputs.artifact-url }})

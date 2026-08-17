@@ -51,8 +51,9 @@ One-time CI configuration (repository variables, secrets, Visual-job permissions
   the diff ratio exceeds `MAX_DIFF_PIXEL_RATIO` (default 1%). **Baselines are generated in CI** (Linux
   font rendering) — don't commit locally generated ones. To refresh after an intentional UI change,
   add the `update-visual-baselines` label to the PR; CI regenerates and commits them. The `Visual` CI
-  job pushes the three images per viewport to the `visual-regression-artifacts` orphan branch and posts
-  them inline in a PR comment.
+  job pushes the three images per viewport to the `ci-artifacts` orphan branch (shared by the
+  Lighthouse and Screenshots jobs via `scripts/publish-images.sh`) and posts them inline in a PR
+  comment. No third-party image host is used.
 
 ## Architecture
 
