@@ -64,6 +64,95 @@ jobs:
       - name: Validate HTML
         run: npm run test:html
 
+  # Visual regression: expected / actual / heatmap per viewport, posted to the PR.
+  Visual:
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ${{ vars.UBUNTU_VERSION }}
+    permissions:
+      contents: write        # push artifacts branch + commit refreshed baselines
+      pull-requests: write   # post the comparison comment
+    steps:
+      - name: Install Hugo CLI
+        run: |
+          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${{ env.HUGO_VERSION }}/hugo_extended_${{ env.HUGO_VERSION }}_linux-amd64.deb \
+          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # Use a PAT if provided so baseline commits can retrigger checks;
+          # falls back to GITHUB_TOKEN otherwise.
+          token: ${{ secrets.VISUAL_TOKEN || secrets.GITHUB_TOKEN }}
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - name: Install Node.js dependencies
+        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: Determine baseline mode
+        id: mode
+        # Refresh baselines when the PR carries the 'update-visual-baselines' label.
+        run: |
+          if echo '${{ toJson(github.event.pull_request.labels.*.name) }}' | grep -q 'update-visual-baselines'; then
+            echo "update=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "update=0" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Run visual regression
+        id: visual
+        # Capture pass/fail without aborting; we still publish images and comment.
+        continue-on-error: true
+        env:
+          UPDATE_SNAPSHOTS: ${{ steps.mode.outputs.update }}
+        run: |
+          if [ "$UPDATE_SNAPSHOTS" = "1" ]; then
+            npm run visual:update
+          else
+            npm run visual
+          fi
+      - name: Commit refreshed baselines
+        # When baselines were (re)generated, commit them back to the PR branch.
+        run: |
+          if [ -n "$(git status --porcelain test/visual/baseline)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add test/visual/baseline
+            git commit -m "Update visual regression baselines [skip ci]"
+            git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
+          fi
+      - name: Publish comparison images
+        id: publish
+        env:
+          ARTIFACTS_BRANCH: visual-regression-artifacts
+          DEST_DIR: pr-${{ github.event.pull_request.number }}/${{ github.run_id }}
+        run: bash scripts/visual-publish.sh >> "$GITHUB_OUTPUT"
+      - name: Build PR comment
+        env:
+          RAW_BASE: ${{ steps.publish.outputs.RAW_BASE }}
+          OUT: visual-comment.md
+        run: node scripts/visual-comment.mjs
+      - name: Find existing visual comment
+        id: find-comment
+        uses: peter-evans/find-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Visual Regression Report
+      - name: Post or update visual regression comment
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: visual-comment.md
+          edit-mode: replace
+      - name: Fail if visual diff exceeded threshold
+        if: ${{ steps.visual.outcome == 'failure' }}
+        run: |
+          echo "Visual regression exceeded the allowed threshold." >&2
+          exit 1
+
   # Make a Lighthouse Report
   Lighthouse:
     needs: Build

@@ -32,5 +32,13 @@ mobile.jpg
 ???x????.jpg
 ????x????.jpg
 
+# Playwright / visual regression
+# Ephemeral per-run comparison output (expected/actual/heatmap + results.json).
+# Baselines under test/visual/baseline/ ARE committed.
+visual-output/
+playwright-report/
+test-results/
+.playwright/
+
 # AI
 .claude

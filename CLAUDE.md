@@ -15,7 +15,7 @@ the output is a static site deployed to GitHub Pages.
 - Local dev server with live reload: `npm run start-server` (serves at `http://localhost:1313/`)
 - Run the full test/lint suite: `npm test`
 
-`npm test` chains these linters, all of which must pass in CI (run individually to isolate failures):
+`npm test` chains these linters plus unit tests; all must pass in CI (run individually to isolate failures):
 
 - `npm run lint` — ESLint over all JS (`npm run lint:fix` to auto-fix)
 - `npm run stylelint` — Stylelint over `src/**/*.css` (`npm run stylelint:fix` to auto-fix)
@@ -23,10 +23,33 @@ the output is a static site deployed to GitHub Pages.
 - `npm run markdownlint` — markdownlint over `src/**/*.md` and `*.md`
 - `npm run package` — npm-package-json-lint over `package.json`
 - `npm run json` — jsonlint over root `*.json`
+- `npm run test:unit` — Vitest (jsdom) over `test/*.test.js` (unit tests for `code.js`)
 
-There is no unit-test runner; "tests" here means the lint suite plus CI-only Lighthouse and
-screenshot (`pageres`) jobs. Building requires the Hugo **extended** binary installed separately
-(it is not an npm dependency).
+`npm test` is intentionally Hugo-free so it runs on any Node version. These need a built site or a
+running server and are wired into CI (not in `npm test`):
+
+- `npm run test:html` — html-validate over `src/public/**/*.html` (build first). Config in
+  `.htmlvalidate.json` disables minification-artifact rules.
+- `npm run visual` / `npm run visual:update` — Playwright visual regression (see below).
+- `npm run lighthouse:check` — fails if any Lighthouse category is below the thresholds in
+  `scripts/check-lighthouse.mjs` (run after `lighthouse-desktop`/`-mobile` produce their JSON).
+
+Building requires the Hugo **extended** binary installed separately (it is not an npm dependency).
+
+### Testing architecture
+
+- **Unit tests** (`test/code.test.js`): `code.js` ends with a CommonJS export shim that is a no-op in
+  the browser (`typeof module === "undefined"`) but lets Vitest `require` it. Tests set browser
+  globals (`UIkit`, `screen`) before loading. `UIkit._initialized` is set `false` in the mock so the
+  load-time IIFE doesn't call `start()`.
+- **Visual regression** (`test/visual/home.spec.js`, `playwright.config.mjs`): captures 4 viewports,
+  compares against committed baselines in `test/visual/baseline/` via pixelmatch, and writes
+  `expected.png`/`actual.png`/`diff.png` per viewport into `visual-output/` (git-ignored). Fails when
+  the diff ratio exceeds `MAX_DIFF_PIXEL_RATIO` (default 1%). **Baselines are generated in CI** (Linux
+  font rendering) — don't commit locally generated ones. To refresh after an intentional UI change,
+  add the `update-visual-baselines` label to the PR; CI regenerates and commits them. The `Visual` CI
+  job pushes the three images per viewport to the `visual-regression-artifacts` orphan branch and posts
+  them inline in a PR comment.
 
 ## Architecture
 
