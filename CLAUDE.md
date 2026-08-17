@@ -36,6 +36,9 @@ running server and are wired into CI (not in `npm test`):
 
 Building requires the Hugo **extended** binary installed separately (it is not an npm dependency).
 
+One-time CI configuration (repository variables, secrets, Visual-job permissions, and the
+`update-visual-baselines` label) is documented in [`.github/CI_SETUP.md`](.github/CI_SETUP.md).
+
 ### Testing architecture
 
 - **Unit tests** (`test/code.test.js`): `code.js` ends with a CommonJS export shim that is a no-op in
