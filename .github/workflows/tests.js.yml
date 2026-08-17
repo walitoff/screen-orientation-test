@@ -38,6 +38,32 @@ jobs:
         run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
       - run: npm test
 
+  # Validate the generated HTML markup
+  HTML:
+    runs-on: ${{ vars.UBUNTU_VERSION }}
+    steps:
+      - name: Install Hugo CLI
+        run: |
+          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${{ env.HUGO_VERSION }}/hugo_extended_${{ env.HUGO_VERSION }}_linux-amd64.deb \
+          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - name: Install Node.js dependencies
+        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+      - name: Build with Hugo
+        working-directory: ./src
+        env:
+          HUGO_ENVIRONMENT: production
+          HUGO_ENV: production
+        run: hugo --minify
+      - name: Validate HTML
+        run: npm run test:html
+
   # Make a Lighthouse Report
   Lighthouse:
     needs: Build
@@ -116,6 +142,10 @@ jobs:
             | ![Lighthouse Mobile Report Score](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[0]}}) | ![Lighthouse Desktop Report Score](${{(fromJson(steps.upload-files-imgbb.outputs.urls))[1]}}) |
 
             [Download report ZIP](${{ steps.lighthouseUploadReport.outputs.artifact-url }})
+      - name: Check Lighthouse thresholds
+        # Runs last so the report artifact and PR comment are always published first;
+        # this step fails the job if any category score is below its configured minimum.
+        run: npm run lighthouse:check
 
 
   # Make screenshots of the resulting page

@@ -26,9 +26,12 @@ export default [
         rules: {},
     },
     {
-        // Settings for configuration files
+        // Settings for configuration files and Node-side scripts
         files: [
             "*.js",
+            "*.mjs",
+            "scripts/**/*.js",
+            "scripts/**/*.mjs",
         ],
         languageOptions: {
             ecmaVersion: "latest",
