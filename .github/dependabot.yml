@@ -37,5 +37,8 @@ updates:
       timezone: "Europe/Paris"
     groups:
       actions-deps:
+        update-types:
+          - "minor"
+          - "patch"
         patterns:
           - "*"

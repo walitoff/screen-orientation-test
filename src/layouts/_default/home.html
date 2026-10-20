@@ -73,7 +73,7 @@
         <p>
             Source code and test instructions are in <a href="https://github.com/rvalitov/screen-orientation-test" target="_blank">GitHub</a>.
         </p>
-        <form class="uk-text-center uk-margin">
+        <div class="uk-text-center uk-margin">
             <div>
                 <label class="uk-form-label" for="browserVersion">
                     Your browser version
@@ -99,7 +99,7 @@
             </div>
             <div class="uk-margin">
                 <div class="uk-form-controls">
-                    <button class="uk-button uk-button-primary" onclick="toggleFullscreenMode(); return false;">Enable/disable fullscreen mode</button>
+                    <button type="button" class="uk-button uk-button-primary" onclick="toggleFullscreenMode(); return false;">Enable/disable fullscreen mode</button>
                 </div>
             </div>
             <div class="uk-margin">
@@ -109,7 +109,7 @@
                 <div class="uk-grid-match uk-child-width-1-2 uk-width-xlarge uk-grid-small" uk-grid>
                     {{ range $collection:=(sort .Site.Data.orientations ".weight" "asc") }}
                     {{if . }}
-                    <button onclick="lockOrientation('{{.id}}')" class="uk-button uk-button-link">
+                    <button type="button" onclick="lockOrientation('{{.id}}')" class="uk-button uk-button-link">
                         <div id="{{.id}}" class="uk-card uk-card-body uk-card-default">
                             <div>
                                 <img src="{{ "images/phone.jpg" | relURL}}" class="phone"
@@ -128,7 +128,7 @@
                     {{end}}
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 <script>

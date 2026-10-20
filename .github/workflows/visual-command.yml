@@ -1,0 +1,105 @@
+# On-demand visual regression, triggered by a maintainer commenting "/visual"
+# on a pull request. Because issue_comment runs in the BASE repo context it has
+# a write-scoped token, so this can render and report fork PRs that the normal
+# Visual job (in tests.js.yml) skips. Access is gated on write permission.
+name: Visual command
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write        # push comparison images to the ci-artifacts branch
+  pull-requests: write   # post the comparison comment
+  issues: write          # react to the triggering comment
+
+jobs:
+  # Verify the comment is "/visual" on a PR from a user with write access.
+  authorize:
+    if: >-
+      ${{ github.event.issue.pull_request &&
+          startsWith(github.event.comment.body, '/visual') }}
+    runs-on: ${{ vars.UBUNTU_VERSION }}
+    outputs:
+      allowed: ${{ steps.check.outputs.allowed }}
+    steps:
+      - name: Check commenter permission
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          level="$(gh api \
+            "repos/${{ github.repository }}/collaborators/${{ github.event.comment.user.login }}/permission" \
+            --jq '.permission' 2>/dev/null || echo none)"
+          echo "Commenter permission: $level"
+          case "$level" in
+            admin|write|maintain) echo "allowed=true" >> "$GITHUB_OUTPUT" ;;
+            *) echo "allowed=false" >> "$GITHUB_OUTPUT" ;;
+          esac
+      - name: Acknowledge command
+        if: ${{ steps.check.outputs.allowed == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # "eyes" reaction so the commenter knows the run started.
+        run: |
+          gh api --method POST \
+            "repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions" \
+            -f content=eyes >/dev/null
+
+  visual:
+    needs: authorize
+    if: ${{ needs.authorize.outputs.allowed == 'true' }}
+    runs-on: ${{ vars.UBUNTU_VERSION }}
+    steps:
+      - name: Install Hugo CLI
+        run: |
+          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${{ env.HUGO_VERSION }}/hugo_extended_${{ env.HUGO_VERSION }}_linux-amd64.deb \
+          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
+        env:
+          HUGO_VERSION: 0.139.3
+      - name: Checkout PR head
+        uses: actions/checkout@v7
+        with:
+          # refs/pull/<n>/head resolves to the PR's head commit, including forks.
+          ref: refs/pull/${{ github.event.issue.number }}/head
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 23.x
+          cache: 'npm'
+      - name: Install Node.js dependencies
+        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: Run visual regression
+        id: visual
+        # Report even when the diff exceeds the threshold; the comment is the point.
+        continue-on-error: true
+        run: npm run visual
+      - name: Publish comparison images
+        id: publish
+        env:
+          ARTIFACTS_BRANCH: ci-artifacts
+          DEST_DIR: visual/pr-${{ github.event.issue.number }}/${{ github.run_id }}
+          SRC_DIR: visual-output
+          GH_TOKEN: ${{ secrets.VISUAL_TOKEN || secrets.GITHUB_TOKEN }}
+        run: bash scripts/publish-images.sh >> "$GITHUB_OUTPUT"
+      - name: Build PR comment
+        env:
+          RAW_BASE: ${{ steps.publish.outputs.RAW_BASE }}
+          OUT: visual-comment.md
+        run: node scripts/visual-comment.mjs
+      - name: Find existing visual comment
+        id: find-comment
+        uses: peter-evans/find-comment@v4
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Visual Regression Report
+      - name: Post or update visual regression comment
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.issue.number }}
+          body-path: visual-comment.md
+          edit-mode: replace

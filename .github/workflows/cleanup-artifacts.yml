@@ -1,0 +1,32 @@
+# Prunes images from the ci-artifacts branch for PRs closed over 30 days ago.
+# Runs on a daily schedule (not on PR close) so recently merged/auto-merged PRs
+# stay visible during a grace period. Can also be run manually.
+name: Cleanup PR artifacts
+
+on:
+  schedule:
+    # Daily at 04:17 UTC (off-peak, avoids the top-of-hour rush).
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+    inputs:
+      retention_days:
+        description: 'Days to keep images after a PR closes'
+        required: false
+        default: '30'
+
+permissions:
+  contents: write        # prune directories on the ci-artifacts branch
+  pull-requests: read     # read PR state / closed_at
+
+jobs:
+  cleanup:
+    runs-on: ${{ vars.UBUNTU_VERSION }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Prune stale PR images from ci-artifacts
+        env:
+          ARTIFACTS_BRANCH: ci-artifacts
+          RETENTION_DAYS: ${{ github.event.inputs.retention_days || '30' }}
+          GH_TOKEN: ${{ secrets.VISUAL_TOKEN || secrets.GITHUB_TOKEN }}
+        run: bash scripts/cleanup-images.sh

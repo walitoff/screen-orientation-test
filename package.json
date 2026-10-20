@@ -17,20 +17,24 @@
     "json": "jsonlint -q ./*.json",
     "lighthouse-desktop": "npx lighthouse http://localhost:1313/ --no-enable-error-reporting --output-path=./desktop --output=html --output=json --config-path=./lr-desktop-config.js --chrome-flags=\"--no-sandbox --headless --disable-gpu --disable-dev-shm-usage\"",
     "lighthouse-mobile": "npx lighthouse http://localhost:1313/ --no-enable-error-reporting --output-path=./mobile --output=html --output=json --config-path=./lr-mobile-config.js --chrome-flags=\"--no-sandbox --headless --disable-gpu --disable-dev-shm-usage\"",
+    "lighthouse:check": "node ./scripts/check-lighthouse.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "markdown": "remark . --frail",
     "markdown:fix": "remark . --frail --output",
     "markdownlint": "markdownlint --config .markdownlint.json \"src/**/*.md\" \"*.md\"",
     "package": "npx npm-package-json-lint .",
-    "screenshot": "pageres http://127.0.0.1:1313 320x568 568x320 360x780 780x360 375x812 812x375 390x844 844x390 430x932 932x430 768x1024 1024x768 810x1080 1080x810 834x1112 1112x834 1024x1366 1366x1024 1440x900 2304x1440 1280x800 1366x768 2560x1440 1920x1080 3200x1800 2048x1152 --overwrite --format=jpg --crop --filename=\"<%= size %>\"",
     "screenshot:desktop": "pageres ./desktop.report.html 800x1000 --overwrite --format=jpg --crop --filename=\"desktop\"",
     "screenshot:mobile": "pageres ./mobile.report.html 800x1000 --overwrite --format=jpg --crop --filename=\"mobile\"",
     "sort": "sort-package-json ./package.json",
     "start-server": "cd ./src && hugo server --environment production",
     "stylelint": "stylelint -f verbose \"src/**/*.css\"",
     "stylelint:fix": "stylelint \"src/**/*.css\" --fix",
-    "test": "npm run lint && npm run stylelint && npm run markdown && npm run markdownlint && npm run package && npm run json"
+    "test": "npm run lint && npm run stylelint && npm run markdown && npm run markdownlint && npm run package && npm run json && npm run test:unit",
+    "test:html": "html-validate \"src/public/**/*.html\"",
+    "test:unit": "vitest run",
+    "visual": "playwright test",
+    "visual:update": "playwright test --update-snapshots"
   },
   "remarkConfig": {
     "plugins": [
@@ -39,28 +43,32 @@
     ]
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.30.1",
+    "@playwright/test": "^1.62.1",
     "@prantlf/jsonlint": "^16.0.0",
     "@types/uikit": "^3.23.0",
     "eslint": "^9.30.1",
     "eslint-plugin-yml": "^1.18.0",
     "globals": "^16.3.0",
+    "html-validate": "^11.4.0",
+    "jsdom": "^29.1.1",
     "lighthouse": "^12.7.1",
     "markdownlint-cli": "^0.46.0",
     "npm-package-json-lint": "^8.0.0",
     "npm-package-json-lint-config-default": "^8.0.0",
     "pageres": "^9.0.0",
     "pageres-cli": "^9.0.0",
+    "pixelmatch": "^7.2.0",
+    "pngjs": "^7.0.0",
     "remark": "^15.0.1",
     "remark-cli": "^12.0.1",
-    "remark-lint-list-item-indent": "^4.0.1",
     "remark-preset-lint-consistent": "^6.0.1",
     "remark-preset-lint-recommended": "^7.0.1",
     "sort-package-json": "^3.4.0",
     "stylelint": "^16.21.1",
     "stylelint-config-standard": "^38.0.0",
-    "uikit": "3.23.11"
+    "uikit": "3.23.11",
+    "vitest": "^4.1.10"
   },
   "engines": {
     "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
